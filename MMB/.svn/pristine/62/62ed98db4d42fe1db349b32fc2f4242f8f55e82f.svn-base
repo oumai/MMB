@@ -1,0 +1,285 @@
+//
+//  ConsultingChat.m
+//  Mamabao
+//
+//  Created by Michael on 15/11/14.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+/*-----------------------------------------------------------------------M-------------------------------------------*/
+
+
+@interface ConsultingChatModel  : NSObject
+- (instancetype)initWithDictionary:(NSDictionary *)dic;
+
+@end
+
+
+
+@interface ConsultingChatModel ()
+
+@end
+
+@implementation ConsultingChatModel
+
+- (instancetype)initWithDictionary:(NSDictionary *)dic
+{
+    if (self == [super init]) {
+        
+        
+        
+    }
+    return self;
+}
+
+@end
+
+
+/*-----------------------------------------------------------------------V-------------------------------------------*/
+
+
+
+@interface ConsultingChatCustomCell : UITableViewCell
+
+
+@end
+
+
+
+@interface ConsultingChatCustomCell ()
+
+
+
+@end
+
+@implementation ConsultingChatCustomCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+
+{
+    if (self == [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+    }
+    return self;
+}
+
+
+
+
+
+@end
+
+
+/*-----------------------------------------------------------------------C-------------------------------------------*/
+
+#import "ConsultingChat.h"
+#import "ConsultingChatPingJiaVC.h"
+@interface ConsultingChat ()<UITableViewDataSource,UITableViewDelegate>
+@property (nonatomic, strong) UITableView *tableView;
+
+@property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) UIView *line;
+@property (nonatomic, strong) UIImageView *headerImage;
+@property (nonatomic, strong) TTTAttributedLabel *nameLabel;
+@property (nonatomic, strong) TTTAttributedLabel *hospitalLabel;
+@property (nonatomic, strong) TTTAttributedLabel *keShiLabel;
+@property (nonatomic, strong) TTTAttributedLabel *yiShiLabel;
+@end
+
+@implementation ConsultingChat
+
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"loding-5"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+        
+        
+        UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithTitle:@"评价" style:UIBarButtonItemStylePlain target:self action:@selector(rightCLicked)];
+        self.navigationItem.rightBarButtonItem = right;
+        right.tintColor = KHexColor(@"#ffffff");
+    }
+    return self;
+}
+
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"咨询记录";
+    NavigationBarTitleColor
+    self.menuController.panEnabel = NO;
+    [self makeUI];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStylePlain)];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:_tableView];
+    
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.headerView.mas_bottom).offset(0);
+        make.left.bottom.right.equalTo(self.view);
+    }];
+}
+
+- (void)makeUI
+{
+    self.headerView = [UIView new];
+    self.headerView.backgroundColor = KHexColor(@"#ffffff");
+    [self.view addSubview:_headerView];
+    
+       
+    
+    self.headerImage = [UIImageView new];
+    self.headerImage.image = [UIImage imageNamed:@"replay2"];
+    [self.headerView addSubview:_headerImage];
+    
+       
+    self.nameLabel = [TTTAttributedLabel new];
+    self.nameLabel.font = KFontSize(15);
+    self.nameLabel.textColor = KHexColor(@"#333333");
+    self.nameLabel.text = @"王君安";
+    [self.headerView addSubview:_nameLabel];
+    
+        
+    self.hospitalLabel = [TTTAttributedLabel new];
+    self.hospitalLabel.font = KFontSize(15);
+    self.hospitalLabel.textColor = KHexColor(@"#666666");
+    self.hospitalLabel.text = @"南山人民医院";
+    [self.headerView addSubview:_hospitalLabel];
+    
+   
+    self.keShiLabel = [TTTAttributedLabel new];
+    self.keShiLabel.font = KFontSize(15);
+    self.keShiLabel.textColor = KHexColor(@"#ff637e");
+    self.keShiLabel.text = @"妇科";
+    [self.headerView addSubview:_keShiLabel];
+    
+   
+    self.yiShiLabel = [TTTAttributedLabel new];
+    self.yiShiLabel.font = KFontSize(15);
+    self.yiShiLabel.textColor = KHexColor(@"#ff637e");
+    self.yiShiLabel.text = @"主任医师";
+    [self.headerView addSubview:_yiShiLabel];
+    
+       self.line = [UIView new];
+    self.line.backgroundColor = KHexColor(@"#ff637e");
+    [self.headerView addSubview:_line];
+
+   
+    [_headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top).offset(64);
+        make.left.right.equalTo(self.view);
+        make.height.equalTo(60);
+    }];
+    [_headerImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.headerView.mas_centerY).offset(0);
+        make.left.equalTo(self.headerView.mas_left).offset(15);
+        make.width.equalTo(41);
+        make.height.equalTo(41);
+    }];
+    [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.headerImage.mas_top).offset(5);
+        make.left.equalTo(self.headerImage.mas_right).offset(10);
+        make.width.equalTo(self.nameLabel.mas_width);
+        make.height.equalTo(15);
+    }];
+    [_hospitalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.nameLabel.mas_centerY).offset(0);
+        make.left.equalTo(self.nameLabel.mas_right).offset(15);
+        make.width.equalTo(self.hospitalLabel.mas_width);
+        make.height.equalTo(15);
+    }];
+    [_keShiLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.nameLabel.mas_centerX).offset(0);
+        make.top.equalTo(self.nameLabel.mas_bottom).offset(5);
+        make.width.equalTo(self.keShiLabel.mas_width);
+        make.height.equalTo(15);
+    }];
+    [_yiShiLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.keShiLabel.mas_centerY).offset(0);
+        make.centerX.equalTo(self.hospitalLabel.mas_centerX).offset(0);
+        make.width.equalTo(self.yiShiLabel.mas_width);
+        make.height.equalTo(15);
+    }];
+    [_line mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.nameLabel.mas_right).offset(7.5);
+        make.top.equalTo(self.keShiLabel.mas_top).offset(3);
+        make.width.equalTo(1);
+        make.height.equalTo(14);
+        
+    }];
+
+
+    
+}
+#pragma mark ------------------------------------------------------------------Actions  ButtonClick-----------------------------------------------------------
+
+- (void)sectionButtonClick
+{
+    
+}
+- (void)leftClicked
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)rightCLicked
+{
+    ConsultingChatPingJiaVC *pin = [ConsultingChatPingJiaVC new];
+    [self.navigationController pushViewController:pin animated:YES];
+}
+
+#pragma mark ------------------------------------------------------------------UITableViewDatasource Delegate-------------------------------------------------
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 45;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CoreWidth, 45)];
+    sectionView.backgroundColor = KHexColor(@"#ebebeb");
+    UILabel *sectionLabel = [UILabel new];
+    sectionLabel.textColor = KHexColor(@"#666666");
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = sectionView.frame;
+    [button addTarget:self action:@selector(sectionButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [sectionView addSubview:button];
+    return sectionView;
+    
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 7;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *identifier = @"cell";
+    ConsultingChatCustomCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (nil == cell) {
+        cell = [[ConsultingChatCustomCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifier];
+    }
+    
+    return cell;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    
+}
+@end
+
+
+
+

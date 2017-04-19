@@ -1,0 +1,15 @@
+//
+//  NoPayYueZiCenterOrderVC.h
+//  Mamabao
+//
+//  Created by Michael on 15/12/8.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface NoPayYueZiCenterOrderVC : UIViewController
+
+@property (nonatomic, strong) NSString *serviceTypeId;
+
+@end

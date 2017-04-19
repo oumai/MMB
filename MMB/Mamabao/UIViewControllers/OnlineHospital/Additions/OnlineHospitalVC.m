@@ -1,0 +1,420 @@
+//
+//  OnlineHospitalVC.m
+//  Benevolence
+//
+//  Created by Michael on 15/10/27.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+/*-----------------------------------------------------------------------M-------------------------------------------*/
+
+#import <UIKit/UIKit.h>
+
+
+
+@interface OnlineHospitalModel  : NSObject
+
+
+
+- (instancetype)initWithDictionary:(NSDictionary *)dic;
+
+@end
+
+
+
+@interface OnlineHospitalModel ()
+
+@end
+
+@implementation OnlineHospitalModel
+
+- (instancetype)initWithDictionary:(NSDictionary *)dic
+{
+    if (self == [super init]) {
+        
+        
+    }
+    return self;
+}
+
+@end
+
+
+/*-----------------------------------------------------------------------V-------------------------------------------*/
+
+
+
+@interface OnlineHospitalCustomCell : UITableViewCell
+
+@property (nonatomic, strong) NSString *iconName;
+
+@end
+
+
+
+@interface OnlineHospitalCustomCell ()
+
+@property (nonatomic, strong) UIImageView *iconImage;
+@property (nonatomic, strong) UILabel *arrowLabel;
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UIView *line;
+@end
+
+@implementation OnlineHospitalCustomCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+
+{
+    if (self == [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+
+        
+        self.line = [UIView new];
+        self.line.backgroundColor = KHexColor(@"#dbdbdb");
+        [self.contentView addSubview:_line];
+       
+        self.iconImage = [UIImageView new];
+        [self.contentView addSubview:_iconImage];
+        
+        self.titleLabel = [UILabel new];
+        self.titleLabel.textColor = KHexColor(@"#999999");
+        self.titleLabel.font = KFontSize(14);
+        [self.contentView addSubview:_titleLabel];
+        
+        self.arrowLabel = [UILabel new];
+        self.arrowLabel.textColor = KHexColor(@"#999999");
+        self.arrowLabel.font = KFontSize(14);
+        self.arrowLabel.text = @"敬请期待";
+        [self.contentView addSubview:_arrowLabel];
+        
+        [_line mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.equalTo(self.contentView);
+            make.bottom.equalTo(self.contentView.mas_bottom).offset(0);
+            make.height.equalTo(0.5);
+        }];
+        
+        [_iconImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView.mas_centerY).offset(0);
+            make.left.equalTo(self.contentView.mas_left).offset(15);
+            make.width.equalTo(29);
+            make.height.equalTo(29);
+        }];
+        
+        
+        [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView.mas_centerY).offset(0);
+            make.left.equalTo(self.iconImage.mas_right).offset(10);
+            make.width.equalTo(self.titleLabel.mas_width);
+            make.height.equalTo(14);
+        }];
+        
+       
+        
+        [_arrowLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView.mas_centerY).offset(0);
+            make.right.equalTo(self.contentView.mas_right).offset(-25);
+            make.width.equalTo(self.arrowLabel.mas_width);
+            make.height.equalTo(14);
+        }];
+        
+        
+        
+    }
+    return self;
+}
+
+- (void)setIconName:(NSString *)iconName
+{
+    if (![iconName isValid]) {
+        return;
+    }
+    self.iconImage.image = [UIImage imageNamed:iconName];
+}
+
+@end
+
+
+/*-----------------------------------------------------------------------C-------------------------------------------*/
+#import "OnlineHospitalVC.h"
+#import "ZYMenuController.h"
+#import "HospitalIntroduceVC.h"
+#import "FreeConsultVC.h"
+#import "RemoteTutelageVC.h"
+@interface OnlineHospitalVC ()<UITableViewDataSource,UITableViewDelegate>
+
+@property (nonatomic, strong) UITableView *tableView;
+
+@property (nonatomic, strong) UIView *freeConsultView;
+@property (nonatomic, strong) UIView *remoteTutelageView;
+@property (nonatomic, strong) UIImageView *freeConsultImage;
+@property (nonatomic, strong) UIImageView *remoteTutelageImage;
+@property (nonatomic, strong) UILabel *freeConsultLabel;
+@property (nonatomic, strong) UILabel *remoteTutelageLabel;
+@property (nonatomic, strong) UIButton *freeConsultButton;
+@property (nonatomic, strong) UIButton *remoteTutelageButton;
+
+@end
+
+@implementation OnlineHospitalVC
+
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])
+    {
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1-First-level-navigation"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+        
+    }
+    return self;
+}
+
+- (void)leftClicked
+{
+    [self.menuController showLeftViewController:YES];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.menuController.panEnabel = YES;
+    self.tabBarController.tabBar.hidden = NO;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    NavigationBarTitleColor
+    self.view.backgroundColor = KHexColor(@"#f3f3f3");
+    
+    [self freeConsultAndRemote];
+    
+    
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStyleGrouped)];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.showsVerticalScrollIndicator = NO;
+    [self.view addSubview:_tableView];
+    
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.freeConsultView.mas_bottom).offset(25);
+        make.left.bottom.right.equalTo(self.view);
+    }];
+    
+}
+#pragma mark ------------------------------------------------------------------Self makeUI -------------------------------------------------
+
+//免费咨询和远程监护
+- (void)freeConsultAndRemote
+{
+    //免费咨询
+    self.freeConsultView = [UIView  new];
+    self.freeConsultView.backgroundColor = KHexColor(@"#ffffff");
+    [self.view addSubview:_freeConsultView];
+ 
+    
+    self.freeConsultLabel = [UILabel new];
+    self.freeConsultLabel.font = KFontSize(14);
+    self.freeConsultLabel.textColor = KHexColor(@"#333333");
+    self.freeConsultLabel.text = @"免费咨询";
+    [self.freeConsultView addSubview:_freeConsultLabel];
+    
+    self.freeConsultImage = [UIImageView new];
+    self.freeConsultImage.image = [UIImage  imageNamed:@"hospital"];
+    [self.freeConsultView addSubview:_freeConsultImage];
+    
+    
+    self.freeConsultButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.freeConsultButton addTarget:self action:@selector(freeConsultButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.freeConsultView addSubview:_freeConsultButton];
+    
+    //远程监护
+    self.remoteTutelageView = [UIView  new];
+    self.remoteTutelageView.backgroundColor = KHexColor(@"#ffffff");
+    [self.view addSubview:_remoteTutelageView];
+    
+    
+    self.remoteTutelageLabel = [UILabel new];
+    self.remoteTutelageLabel.font = KFontSize(14);
+    self.remoteTutelageLabel.textColor = KHexColor(@"#333333");
+    self.remoteTutelageLabel.text = @"远程监护";
+    [self.remoteTutelageView addSubview:_remoteTutelageLabel];
+    
+    self.remoteTutelageImage = [UIImageView new];
+    self.remoteTutelageImage.image = [UIImage  imageNamed:@"2_hospital"];
+    [self.remoteTutelageView addSubview:_remoteTutelageImage];
+    
+    self.remoteTutelageButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.remoteTutelageButton addTarget:self action:@selector(remoteTutelageButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.remoteTutelageView addSubview:_remoteTutelageButton];
+    
+    [_freeConsultView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top).offset(64);
+        make.left.equalTo(self.view.mas_left).offset(0);
+        make.right.equalTo(self.view.mas_centerX).offset(-1);
+        make.height.equalTo(self.freeConsultView.mas_width);
+    }];
+    
+    [_freeConsultLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.freeConsultView.mas_centerX).offset(0);
+        make.bottom.equalTo(self.freeConsultView.mas_bottom).offset(-50);
+        make.width.equalTo(self.freeConsultLabel.mas_width);
+        make.height.equalTo(14);
+    }];
+    
+    [_freeConsultImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.freeConsultView.mas_centerX).offset(0);
+        make.bottom.equalTo(self.freeConsultLabel.mas_top).offset(-10);
+        make.width.equalTo(39);
+        make.height.equalTo(39);
+    }];
+    [_freeConsultButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.bottom.right.equalTo(self.freeConsultView);
+    }];
+    
+    
+    [_remoteTutelageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top).offset(64);
+        make.left.equalTo(self.view.mas_centerX).offset(1);
+        make.right.equalTo(self.view.mas_right).offset(0);
+        make.height.equalTo(self.remoteTutelageView.mas_width);
+    }];
+    
+    [_remoteTutelageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.remoteTutelageView.mas_centerX).offset(0);
+        make.bottom.equalTo(self.remoteTutelageView.mas_bottom).offset(-50);
+        make.width.equalTo(self.remoteTutelageLabel.mas_width);
+        make.height.equalTo(14);
+    }];
+    
+    [_remoteTutelageImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.remoteTutelageView.mas_centerX).offset(0);
+        make.bottom.equalTo(self.remoteTutelageLabel.mas_top).offset(-10);
+        make.width.equalTo(39);
+        make.height.equalTo(39);
+    }];
+    
+    [_remoteTutelageButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.bottom.right.equalTo(self.remoteTutelageView);
+    }];
+    
+}
+
+#pragma mark ------------------------------------------------------------------Actions  ButtonClick-------------------------------------------------
+//咨询
+- (void)freeConsultButtonClick
+{
+    FreeConsultVC *free = [FreeConsultVC new];
+    [self.navigationController pushViewController:free animated:YES];
+}
+//远程监护
+- (void)remoteTutelageButtonClick
+{
+    RemoteTutelageVC *remote = [RemoteTutelageVC new];
+    [self.navigationController pushViewController:remote animated:YES];}
+//妇产医院
+- (void)hospitalClick
+{
+    HospitalIntroduceVC *hospital = [HospitalIntroduceVC new];
+    [self.navigationController pushViewController:hospital animated:YES];
+}
+
+
+#pragma mark ------------------------------------------------------------------UITableViewDatasource Delegate---------------------------------------------
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 50;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    
+    UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CoreWidth, 50)];
+    sectionView.backgroundColor = KHexColor(@"#ffffff");
+    sectionView.layer.borderColor = KHexColor(@"dbdbdb").CGColor;
+    sectionView.layer.borderWidth = 0.5;
+    
+    
+    UIImageView *imageView = [UIImageView new];
+    imageView.image = [UIImage imageNamed:@"3_hospital"];
+    [sectionView addSubview:imageView];
+    
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 80, 15)];
+    label.text = @"妇产医院";
+    label.textColor = KHexColor(@"#333333");
+    label.font = KFontSize(14);
+    [sectionView addSubview:label];
+    
+    
+    UIImageView *arrowImage = [UIImageView new];
+    arrowImage.image = [UIImage imageNamed:@"3-1monitordata"];
+    [sectionView addSubview:arrowImage];
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self action:@selector(hospitalClick) forControlEvents:UIControlEventTouchUpInside];
+    [sectionView addSubview:button];
+    
+    [imageView  mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.centerY.equalTo(sectionView.mas_centerY).offset(0);
+        make.left.equalTo(sectionView.mas_left).offset(15);
+        make.width.equalTo(29);
+        make.height.equalTo(29);
+    }];
+    [label  mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.centerY.equalTo(sectionView.mas_centerY).offset(0);
+        make.left.equalTo(imageView.mas_right).offset(10);
+        make.width.equalTo(label.mas_width);
+        make.height.equalTo(15);
+    }];
+    [arrowImage  mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.centerY.equalTo(sectionView.mas_centerY).offset(0);
+        make.right.equalTo(sectionView.mas_right).offset(-20);
+        make.width.equalTo(10);
+        make.height.equalTo(14);
+    }];
+    
+    [button mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.bottom.right.equalTo(sectionView);
+    }];
+    return sectionView;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 3;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *identifier = @"cell";
+    OnlineHospitalCustomCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (nil == cell) {
+        cell = [[OnlineHospitalCustomCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifier];
+    }
+    NSArray *titleLabelArray = @[@"检查报告",@"私人医生",@"名医馆"];
+    NSArray *iconArrray = @[@"4_hospital",@"5-hospital",@"6-hospital"];
+    cell.titleLabel.text = titleLabelArray[indexPath.row];
+    cell.iconName = iconArrray[indexPath.row];
+
+    return cell;
+}
+
+#pragma mark ------------------------------------------------------------------ASURL-----------------------------------------------------------------
+
+- (void)setque
+{
+    
+}
+
+@end

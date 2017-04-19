@@ -1,0 +1,265 @@
+//
+//  BabyAndMotherChangeVC.m
+//  Mamabao
+//
+//  Created by Michael on 15/11/9.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+/*-----------------------------------------------------------------------M-------------------------------------------*/
+
+
+
+
+@interface BabyAndMotherModel: NSObject
+- (instancetype)initWithDictionary:(NSDictionary *)dic;
+
+@end
+
+
+
+@interface BabyAndMotherModel ()
+
+@end
+
+@implementation BabyAndMotherModel
+
+- (instancetype)initWithDictionary:(NSDictionary *)dic
+{
+    if (self == [super init]) {
+        
+        
+        
+    }
+    return self;
+}
+
+@end
+
+
+/*-----------------------------------------------------------------------V-------------------------------------------*/
+
+
+
+@interface BabyAndMotherCustomCell :  UITableViewCell
+
++ (CGFloat)heightForCellRow:(NSString *)string;
+
+@end
+
+
+
+@interface BabyAndMotherCustomCell ()
+@property (nonatomic, strong) TTTAttributedLabel *babyChangeDetailLabel;
+@property (nonatomic, strong) UIView *bgView;
+@end
+
+@implementation BabyAndMotherCustomCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+
+{
+    if (self == [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        self.backgroundColor = KHexColor(@"#ffe0e5");
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+
+        self.bgView = [UIView new];
+        self.bgView.layer.cornerRadius = 4;
+        self.bgView.layer.masksToBounds = YES;
+        self.bgView.layer.borderColor = KHexColor(@"#ffffff").CGColor;
+        self.bgView.layer.borderWidth = 1;
+        self.bgView.backgroundColor = KHexColor(@"#fff3f5");
+        [self.contentView addSubview:_bgView];
+        
+       
+        
+        self.babyChangeDetailLabel = [TTTAttributedLabel new];
+        self.babyChangeDetailLabel.backgroundColor =  KHexColor(@"#fff3f5");
+        self.babyChangeDetailLabel.textColor = KHexColor(@"#999999");
+        self.babyChangeDetailLabel.font = KFontSize(14);
+        self.babyChangeDetailLabel.numberOfLines = 0;
+        self.babyChangeDetailLabel.lineSpacing = 5;
+        [self.contentView addSubview:_babyChangeDetailLabel];
+        
+        [_bgView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView.mas_top).offset(7);
+            make.left.equalTo(self.contentView.mas_left).offset(7);
+            make.bottom.equalTo(self.contentView.mas_bottom).offset(-7);
+            make.right.equalTo(self.contentView.mas_right).offset(-7);
+            
+            
+        }];
+        
+        [_babyChangeDetailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView.mas_top).offset(10);
+            make.left.equalTo(self.contentView.mas_left).offset(13);
+            make.bottom.equalTo(self.contentView.mas_bottom).offset(-10);
+            make.right.equalTo(self.contentView.mas_right).offset(-13);
+
+            
+        }];
+
+    }
+    return self;
+}
+
++ (CGFloat)heightForCellRow:(NSString *)string
+{
+    if (![string isValid]) {
+        return 0;
+    }
+    CGFloat bottomSpace = 16;
+    CGFloat detail = [NSAttributedString contentHeightWithText:string width:CoreWidth - 14-10  fontSize:14 lineSpacing:5];
+    return bottomSpace + detail+20;
+}
+
+
+@end
+
+
+/*-----------------------------------------------------------------------C-------------------------------------------*/
+
+#import "BabyAndMotherChangeVC.h"
+
+
+static NSString  *baobao = @"答：因为订单通过手机验证码绑定您当时的登陆账号，加入您改变登陆方式是无法显示您的订单的，必须用获取订单的登录号才可以。";
+static NSString  *mama = @"答：① 使用远程监控前如您还没激活过胎心仪可提前进行激活。② 在进行远程监控前，为保持监测过程顺畅稳定，建议先连接Wifi并开启蓝牙连接设备。③ 监测过程尽量保持平静，减少外界干扰，保持监测过程稳定通畅。接啊快乐的飞机上开房间卡死啦的积分卡量较大时考虑放假快乐电视剧风口浪尖卡德罗斯交罚款了绝对是";
+@interface BabyAndMotherChangeVC ()<UITableViewDataSource,UITableViewDelegate>
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIView *babyChangeView;
+@property (nonatomic, strong) UIView *motherChangeView;
+@end
+
+@implementation BabyAndMotherChangeVC
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        
+        
+        
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"loding-5"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+    }
+    return self;
+}
+
+- (void)leftClicked
+{
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+}
+
+PanBackClick
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    self.title = @"宝妈";
+    PanBack
+    NavigationBarTitleColor;
+    self.menuController.panEnabel = NO;
+    self.view.backgroundColor = KHexColor(@"#ffe0e5");
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStyleGrouped)];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.backgroundColor = KHexColor(@"#ffe0e5");
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:_tableView];
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top).offset(0);
+        make.left.bottom.right.equalTo(self.view);
+    }];
+}
+
+
+
+
+
+
+
+#pragma mark ----------------------------------------------------------------------------UITableViewDatasource delegate---------------------------------------------
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 2;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 40;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CoreWidth, 40)];
+    sectionView.backgroundColor = KHexColor(@"#fff3f5");
+    
+    UIView *shu = [UIView new];
+    shu.backgroundColor = KHexColor(@"#ffe0e5");
+    [sectionView addSubview:shu];
+    
+       
+    UIImageView *baoChangeImage = [UIImageView new];
+    baoChangeImage.image = section == 0 ?[UIImage imageNamed:@"pregnant_14mother"] :[UIImage imageNamed:@"pregnant_15mother"];
+    [sectionView addSubview:baoChangeImage];
+    
+      
+    UILabel *titleLabel = [UILabel new];
+    titleLabel.text = section == 0 ? @"宝宝变化" : @"宝妈变化";
+    [sectionView addSubview:titleLabel];
+    
+    [shu mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(sectionView.mas_top).offset(0);
+        make.left.equalTo(25);
+        make.width.equalTo(10);
+        make.height.equalTo(40);
+    }];
+    [baoChangeImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(shu.mas_centerX);
+        make.centerY.equalTo(shu.mas_centerY);
+        make.width.equalTo(20);
+        make.height.equalTo(20);
+    }];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(shu.mas_right).offset(20);
+        make.centerY.equalTo(shu.mas_centerY);
+        make.width.equalTo(titleLabel.mas_width);
+        make.height.equalTo(17);
+    }];
+    
+    return sectionView;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSArray *array = @[baobao,mama];
+    return [BabyAndMotherCustomCell heightForCellRow:array[indexPath.section]];
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *identifier = @"cell";
+    BabyAndMotherCustomCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (nil == cell) {
+        cell = [[BabyAndMotherCustomCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifier];
+    }
+    NSArray *array = @[baobao,mama];
+    cell.babyChangeDetailLabel.text = array[indexPath.section];
+    return cell;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
+@end

@@ -1,0 +1,454 @@
+
+//
+//  PayOrderVC.m
+//  Mamabao
+//
+//  Created by Michael on 15/12/14.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+
+/*-----------------------------------------------------------------------M-------------------------------------------*/
+
+
+@interface PayOrderModel  : NSObject
+- (instancetype)initWithDictionary:(NSDictionary *)dic;
+
+@end
+
+
+
+@interface PayOrderModel ()
+
+@end
+
+@implementation PayOrderModel
+
+- (instancetype)initWithDictionary:(NSDictionary *)dic
+{
+    if (self == [super init]) {
+        
+        
+        
+    }
+    return self;
+}
+
+@end
+
+
+/*-----------------------------------------------------------------------V-------------------------------------------*/
+@interface PayOrderCustomCell : UITableViewCell
+
+
+@end
+
+@interface PayOrderCustomCell ()
+@property (nonatomic, strong) UIView *line;
+@property (nonatomic, strong) TTTAttributedLabel *titleLabel;
+@property (nonatomic, strong) TTTAttributedLabel *label;
+
+@end
+
+@implementation PayOrderCustomCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+
+{
+    if (self == [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.line = [UIView new];
+        self.line.backgroundColor = KHexColor(@"#ecebec");
+        [self.contentView addSubview:_line];
+        
+              
+        self.titleLabel = [TTTAttributedLabel new];
+        self.titleLabel.font = KFontSize(14);
+        self.titleLabel.textColor = KHexColor(@"#949394");
+        [self.contentView addSubview:_titleLabel];
+        
+              
+        self.label = [TTTAttributedLabel new];
+        self.label.font = KFontSize(14);
+        self.label.textColor = KHexColor(@"#313131");
+        [self.contentView addSubview:_label];
+        
+        [_line mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView.mas_bottom).offset(0);
+            make.left.right.equalTo(self.contentView);
+            make.height.equalTo(1);
+        }];
+        [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView);
+            make.left.equalTo(self.contentView.mas_left).offset(20);
+            make.width.equalTo(self.titleLabel.mas_width);
+            make.height.equalTo(14);
+        }];
+        [_label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView);
+            make.left.equalTo(self.contentView.mas_left).offset(150);
+            make.width.equalTo(self.label.mas_width);
+            make.height.equalTo(14);
+        }];
+    }
+    return self;
+}
+
+
+
+
+
+@end
+
+/*-----------------------------------------------------------------------V-------------------------------------------*/
+@interface PayOrderCell : UITableViewCell
+
+
+@end
+
+@interface PayOrderCell ()
+@property (nonatomic, strong) UIView *line;
+@property (nonatomic, strong) UIImageView *iconImage;
+@property (nonatomic, strong) UIImageView *circleImage;
+@property (nonatomic, strong) UIImageView *cherkImage;
+@property (nonatomic, strong) TTTAttributedLabel *label;
+@property (nonatomic, strong) TTTAttributedLabel *detailLabel;
+@property (nonatomic, strong) TTTAttributedLabel *reduceLabel;
+@end
+
+@implementation PayOrderCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+
+{
+    if (self == [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.line = [UIView new];
+        self.line.backgroundColor = KHexColor(@"#ecebec");
+        [self.contentView addSubview:_line];
+        
+        self.iconImage = [UIImageView new];
+        [self.contentView addSubview:_iconImage];
+        
+       
+        
+        self.circleImage = [UIImageView new];
+        self.circleImage.image = [UIImage imageNamed:@"notchoice"];
+        [self.contentView addSubview:_circleImage];
+        
+      
+        
+        self.cherkImage = [UIImageView new];
+        [self.contentView addSubview:_cherkImage];
+        
+       
+        
+        self.label = [TTTAttributedLabel new];
+        self.label.font = KFontSize(14);
+        self.label.textColor = KHexColor(@"#313131");
+        [self.contentView addSubview:_label];
+       
+        
+        self.reduceLabel = [TTTAttributedLabel new];
+        self.reduceLabel.layer.cornerRadius = 3;
+        self.reduceLabel.layer.masksToBounds = YES;
+        self.reduceLabel.layer.borderColor = KHexColor(@"#ff8d24").CGColor;
+        self.reduceLabel.layer.borderWidth = 1;
+        self.reduceLabel.textAlignment = NSTextAlignmentCenter;
+        self.reduceLabel.font = KFontSize(12);
+        self.reduceLabel.textColor = KHexColor(@"#ff8d24");
+        self.reduceLabel.text = @"立减2元";
+        [self.contentView addSubview:_reduceLabel];
+        
+        
+        self.detailLabel = [TTTAttributedLabel new];
+        self.detailLabel.font = KFontSize(12);
+        self.detailLabel.textColor = KHexColor(@"#949394");
+        [self.contentView addSubview:_detailLabel];
+        
+      
+        [_iconImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView);
+            make.left.equalTo(self.contentView.mas_left).offset(10);
+            make.width.equalTo(48);
+            make.height.equalTo(41);
+        }];
+        [_circleImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView);
+            make.right.equalTo(self.contentView.mas_right).offset(-20);
+            make.width.equalTo(18);
+            make.height.equalTo(18);
+        }];
+        [_cherkImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView);
+            make.right.equalTo(self.contentView.mas_right).offset(-20);
+            make.width.equalTo(18);
+            make.height.equalTo(18);
+        }];
+
+        
+        [_line mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView.mas_bottom).offset(0);
+            make.left.right.equalTo(self.contentView);
+            make.height.equalTo(1);
+        }];
+       
+        [_label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.iconImage.mas_top).offset(0);
+            make.left.equalTo(self.iconImage.mas_right).offset(5);
+            make.width.equalTo(self.label.mas_width);
+            make.height.equalTo(14);
+        }];
+        
+        [_reduceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.iconImage.mas_bottom).offset(-4);
+            make.left.equalTo(self.iconImage.mas_right).offset(10);
+            make.width.equalTo(55);
+            make.height.equalTo(18);
+        }];
+        
+        [_detailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.reduceLabel.mas_centerY).offset(0);
+            make.left.equalTo(self.reduceLabel.mas_right).offset(10);
+            make.width.equalTo(self.detailLabel.mas_width);
+            make.height.equalTo(14);
+        }];
+
+    }
+    return self;
+}
+
+
+
+
+
+@end
+
+
+/*-----------------------------------------------------------------------C-------------------------------------------*/
+
+#import "PayOrderVC.h"
+
+@interface PayOrderVC ()<UITableViewDataSource,UITableViewDelegate>
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIView *sectionLine;
+@property (nonatomic, strong) TTTAttributedLabel *sectionLabel;
+@property (nonatomic, strong) TTTAttributedLabel *sectionTitleLabel;
+@property (nonatomic, strong) UIView *footerView;
+@property (nonatomic, strong) UIButton *surePayButton;
+@property (nonatomic, assign) NSInteger selectedRow;  //选中的这一行
+@end
+
+@implementation PayOrderVC
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"loding-5"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+    }
+    return self;
+}
+
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"支付订单";
+    NavigationBarTitleColor
+    self.menuController.panEnabel = NO;
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStylePlain)];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.rowHeight = 40;
+    [self.view addSubview:_tableView];
+    
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.bottom.right.equalTo(self.view);
+    }];
+    [self makeFooterView];
+    
+}
+
+- (void)makeFooterView
+{
+    
+    self.footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CoreWidth, 100)];
+    self.tableView.tableFooterView = self.footerView;
+    self.surePayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.surePayButton.layer.cornerRadius = 5;
+    self.surePayButton.layer.masksToBounds = YES;
+    [self.surePayButton setTitle:@"确认支付" forState:UIControlStateNormal];
+    [self.surePayButton setTitleColor:KHexColor(@"#ffffff") forState:UIControlStateNormal];
+    [self.surePayButton setBackgroundImage:[UIImage createImageWithColor:KHexColor(@"#ff879a")] forState:UIControlStateNormal];
+    [self.surePayButton addTarget:self action:@selector(surePayButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.footerView addSubview:_surePayButton];
+    
+    [_surePayButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.footerView.mas_centerX).offset(0);
+        make.top.equalTo(self.footerView.mas_top).offset(10);
+        make.width.equalTo(250);
+        make.height.equalTo(40);
+    }];
+
+}
+#pragma mark ------------------------------------------------------------------Actions  ButtonClick-----------------------------------------------------------
+
+- (void)surePayButtonClick
+{
+    
+}
+- (void)leftClicked
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+#pragma mark ------------------------------------------------------------------UITableViewDatasource Delegate-------------------------------------------------
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 2;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 0 == section ? 0 : 60;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *sectionAll = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CoreWidth, 60)];
+    sectionAll.backgroundColor = KHexColor(@"#eeedee");
+    UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 20, CoreWidth, 40)];
+    sectionView.backgroundColor = KHexColor(@"#ffffff");
+    [sectionAll addSubview:sectionView];
+    
+    self.sectionTitleLabel = [TTTAttributedLabel new];
+    self.sectionTitleLabel.textColor = KHexColor(@"#303030");
+    self.sectionTitleLabel.font = KFontSize(14);
+    self.sectionTitleLabel.text = @"还需付款:";
+    [sectionView addSubview:_sectionTitleLabel];
+    
+  
+    self.sectionLabel = [TTTAttributedLabel new];
+    self.sectionLabel.textColor = KHexColor(@"#ff003e");
+    self.sectionLabel.font = KFontSize(14);
+    self.sectionLabel.text = @"￥1000";
+    [sectionView addSubview:_sectionLabel];
+    
+    self.sectionLine = [UIView new];
+    self.sectionLine.backgroundColor = KHexColor(@"#ecebec");
+    [sectionView addSubview:_sectionLine];
+    
+    
+    [_sectionTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(sectionView.mas_centerY).offset(0);
+        make.left.equalTo(sectionView.mas_left).offset(10);
+        make.width.equalTo(self.sectionTitleLabel.mas_width);
+        make.height.equalTo(14);
+    }];
+
+    
+    [_sectionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(sectionView.mas_centerY).offset(0);
+        make.left.equalTo(self.sectionTitleLabel.mas_right).offset(10);
+        make.width.equalTo(self.sectionLabel.mas_width);
+        make.height.equalTo(14);
+    }];
+    [_sectionLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(sectionView.mas_bottom).offset(0);
+        make.left.right.equalTo(sectionView);
+        make.height.equalTo(1);
+    }];
+    
+    return sectionAll;
+    
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return section == 0 ? 7 : 3;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return indexPath.section == 0 ? 40 : 60;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        static NSString *identifier = @"cell";
+        PayOrderCustomCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if (nil == cell)
+        {
+            cell = [[PayOrderCustomCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifier];
+        }
+        NSArray *titleArray = @[@"服务会所",@"购买内容",@"服务费用",@"姓名",@"联系电话",@"地址",@"服务时间"];
+        cell.titleLabel.text = titleArray[indexPath.row];
+        return cell;
+
+    }
+    else
+    {
+        static NSString *identifier = @"cellP";
+        PayOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if (nil == cell)
+        {
+            cell = [[PayOrderCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifier];
+        }
+        NSArray *iconArray = @[@"unionpay",@"wechat",@"alipay"];
+        NSArray *labeArray = @[@"银联支付",@"微信支付",@"支付宝支付"];
+        NSArray *detaiArra = @[@"支持储蓄卡信用卡...",@"推荐安装微信5.0以上版本...",@"推荐安装支付宝5.0以上版本..."];
+        cell.iconImage.image = [UIImage imageNamed:iconArray[indexPath.row]];
+        cell.label.text = labeArray[indexPath.row];
+        cell.detailLabel.text = detaiArra[indexPath.row];
+        
+        if (indexPath.row == _selectedRow) {
+            cell.cherkImage.image = [UIImage imageNamed:@"choiceC"];
+        }
+        else{
+             cell.cherkImage.image = [UIImage imageNamed:@""];
+        }
+        return cell;
+
+    }
+   
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (indexPath.section == 1) {
+        _selectedRow = indexPath.row;
+        [_tableView reloadData];
+    }
+}
+
+- (void)requestData
+{
+    [ASURLConnection requestAFNJSon:@{@"order_id":@53} method:@"renhe.orderService.orderDetail" view:self.view version:@"/v3" completeBlock:^(NSData *data, id responseObject) {
+        if ([[ASURLConnection getMsg:responseObject] isEqualToNumber:@1]) {
+            
+        }
+        
+    } errorBlock:^(NSError *error) {
+        
+    }];
+    
+    NSDictionary *jsonDic = @{@"order_id":@"",
+                              @"thirdPayId":@"",
+                              @"payType":@"",
+                              @"payStatus":@"",
+                              @"paytext":@"",
+                              @"":@""};
+    
+    [ASURLConnection requestAFNJSon:jsonDic method:@"renhe.momService.orderPayReport" view:self.view version:@"/v3" completeBlock:^(NSData *data, id responseObject) {
+        if ([[ASURLConnection getMsg:responseObject] isEqualToNumber:@1]) {
+            
+        }
+    } errorBlock:^(NSError *error) {
+    }];
+}
+@end

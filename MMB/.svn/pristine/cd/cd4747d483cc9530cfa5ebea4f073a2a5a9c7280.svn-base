@@ -1,0 +1,13 @@
+//
+//  ConsultingChatPingJiaVC.h
+//  Mamabao
+//
+//  Created by Michael on 15/11/16.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface ConsultingChatPingJiaVC : UIViewController
+
+@end

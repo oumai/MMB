@@ -1,0 +1,18 @@
+//
+//  YueSaoDetailVC.h
+//  Mamabao
+//
+//  Created by Michael on 15/12/11.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface YueSaoDetailVC : UIViewController
+
+@property (nonatomic, strong) NSString *navigationTitle;
+@property (nonatomic, strong) NSString *entity_id;
+@property (nonatomic, strong) NSString *nanny_id;
+@property (nonatomic, strong) NSString *isNanny;
+
+@end

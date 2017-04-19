@@ -1,0 +1,278 @@
+//
+//  NameVC.m
+//  Mamabao
+//
+//  Created by Michael on 15/12/14.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+#import "NameVC.h"
+#import "YSTaoCanDetailVC.h"
+@interface NameVC ()
+@property (nonatomic, strong) NSDictionary *dataDic;
+@property (nonatomic, strong) NSMutableArray *dataArray;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) UIImageView *headerImage;
+
+@property (nonatomic, strong) UIView *gerRenView;
+@property (nonatomic, strong) UIImageView *gerRenImage;
+@property (nonatomic, strong) TTTAttributedLabel *gerRenLabel;
+@property (nonatomic, strong) UIView *gerRenLine1;
+@property (nonatomic, strong) UIView *gerRenLine2;
+@property (nonatomic, strong) UIView *gerRenLine3;
+@property (nonatomic, strong) TTTAttributedLabel *gerRenLabel1;
+@property (nonatomic, strong) TTTAttributedLabel *gerRenLabel2;
+@property (nonatomic, strong) TTTAttributedLabel *gerRenLabel4;
+
+@property (nonatomic, strong) TTTAttributedLabel *priceLabel;
+@property (nonatomic, strong) TTTAttributedLabel *healthLabel;
+@property (nonatomic, strong) TTTAttributedLabel *ageLabel;
+@property (nonatomic, strong) UIButton *goYuYueButton;
+
+@end
+
+@implementation NameVC
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"loding-5"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+    }
+    return self;
+}
+
+- (void)leftClicked
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"王丽";
+    NavigationBarTitleColor
+    self.menuController.panEnabel = NO;
+    self.dataArray = [NSMutableArray array];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStylePlain)];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:_tableView];
+    
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.bottom.right.equalTo(self.view);
+    }];
+    [self makeHeaderView];
+    [self requestData];
+}
+
+- (void)makeHeaderView
+{
+    self.headerView = [[UIView alloc] init];
+    self.headerView.frame = CGRectMake(0, 0, CoreWidth, CoreHeight);
+    self.headerView.backgroundColor = KHexColor(@"#ebebeb");
+    [self.tableView addSubview:_headerView];
+    
+    self.headerImage = [UIImageView new];
+    [self.headerView addSubview:_headerImage];
+    
+    
+    self.gerRenImage = [UIImageView new];                           //个人
+    self.gerRenImage.image = [UIImage imageNamed:@"introduction"];
+    [self.headerView addSubview:_gerRenImage];
+    
+    self.gerRenLabel = [TTTAttributedLabel new];
+    self.gerRenLabel.font = KFontSize(14);
+    self.gerRenLabel.textColor = KHexColor(@"#5d5d5d");
+    self.gerRenLabel.text = @"个人信息";
+    [self.headerView addSubview:_gerRenLabel];
+    
+    self.gerRenView = [UIView new];
+    self.gerRenView.layer.cornerRadius = 5;
+    self.gerRenView.layer.masksToBounds = YES;
+    self.gerRenView.layer.borderColor = KHexColor(@"#c5c5c5").CGColor;
+    self.gerRenView.layer.borderWidth = 0.5;
+    self.gerRenView.backgroundColor = KHexColor(@"#ffffff");
+    [self.headerView addSubview:_gerRenView];
+    
+    
+    self.gerRenLine1 = [UIView new];
+    self.gerRenLine1.backgroundColor = KHexColor(@"#c5c5c5");
+    [self.headerView addSubview:_gerRenLine1];
+    
+    self.gerRenLine2 = [UIView new];
+    self.gerRenLine2.backgroundColor = KHexColor(@"#c5c5c5");
+    [self.headerView addSubview:_gerRenLine2];
+    
+    
+    
+    self.gerRenLabel1 = [TTTAttributedLabel new];
+    self.gerRenLabel1.font = KFontSize(14);
+    self.gerRenLabel1.textColor = KHexColor(@"#8a8a8a");
+    self.gerRenLabel1.text = @"价格";
+    [self.headerView addSubview:_gerRenLabel1];
+    
+    
+    
+    self.gerRenLabel2 = [TTTAttributedLabel new];
+    self.gerRenLabel2.font = KFontSize(14);
+    self.gerRenLabel2.textColor = KHexColor(@"#8a8a8a");
+    self.gerRenLabel2.text = @"健康状况";
+    [self.headerView addSubview:_gerRenLabel2];
+    
+    
+    
+    self.gerRenLabel4 = [TTTAttributedLabel new];
+    self.gerRenLabel4.font = KFontSize(14);
+    self.gerRenLabel4.textColor = KHexColor(@"#8a8a8a");
+    self.gerRenLabel4.text = @"年龄";
+    [self.headerView addSubview:_gerRenLabel4];
+    
+    
+    self.priceLabel = [TTTAttributedLabel new];         //request
+    self.priceLabel.font = KFontSize(14);
+    self.priceLabel.textColor = KHexColor(@"#464646");
+    [self.headerView addSubview:_priceLabel];
+    
+    
+    
+    self.healthLabel = [TTTAttributedLabel new];
+    self.healthLabel.font = KFontSize(14);
+    self.healthLabel.textColor = KHexColor(@"#464646");
+    [self.headerView addSubview:_healthLabel];
+    
+    
+    
+    
+    
+    self.ageLabel = [TTTAttributedLabel new];
+    self.ageLabel.font = KFontSize(14);
+    self.ageLabel.textColor = KHexColor(@"#464646");
+    [self.headerView addSubview:_ageLabel];
+    
+    
+    self.goYuYueButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.goYuYueButton setTitle:@"去预约" forState:UIControlStateNormal];
+    [self.goYuYueButton setTitleColor:KHexColor(@"#ffffff") forState:UIControlStateNormal];
+    [self.goYuYueButton setBackgroundImage:[UIImage createImageWithColor:KHexColor(@"#ff879a")] forState:UIControlStateNormal];
+    [self.goYuYueButton addTarget:self action:@selector(goYuYueButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerView addSubview:_goYuYueButton];
+    
+    [_headerImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.headerView.mas_top).offset(0);
+        make.centerX.equalTo(self.headerView.mas_centerX).offset(0);
+        make.width.equalTo(200);
+        make.height.equalTo(200);
+    }];
+
+    
+    [_gerRenImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.headerImage.mas_bottom).offset(10);
+        make.left.equalTo(self.headerView.mas_left).offset(10);
+        make.width.equalTo(15);
+        make.height.equalTo(15);
+    }];
+    
+    [_gerRenLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.gerRenImage.mas_centerY).offset(0);
+        make.left.equalTo(self.gerRenImage.mas_right).offset(10);
+        make.width.equalTo(self.gerRenLabel.mas_width);
+        make.height.equalTo(14);
+    }];
+    
+    [_gerRenView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.gerRenImage.mas_bottom).offset(10);
+        make.left.equalTo(self.headerView.mas_left).offset(10);
+        make.right.equalTo(self.headerView.mas_right).offset(-10);
+        make.height.equalTo(120);
+    }];
+
+    [_gerRenLine1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.gerRenView.mas_top).offset(40);
+        make.left.equalTo(self.headerView.mas_left).offset(25);
+        make.right.equalTo(self.headerView.mas_right).offset(-25);
+        make.height.equalTo(0.5);
+    }];
+    
+    [_gerRenLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.gerRenView.mas_top).offset(80);
+        make.left.equalTo(self.headerView.mas_left).offset(25);
+        make.right.equalTo(self.headerView.mas_right).offset(-25);
+        make.height.equalTo(0.5);
+    }];
+
+    
+    [_gerRenLabel1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.gerRenView.mas_top).offset(160/8);
+        make.left.equalTo(self.gerRenView.mas_left).offset(20);
+        make.width.equalTo(self.gerRenLabel1.mas_width);
+        make.height.equalTo(14);
+    }];
+    [_gerRenLabel2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.gerRenView.mas_centerY).offset(0);
+        make.left.equalTo(self.gerRenView.mas_left).offset(20);
+        make.width.equalTo(self.gerRenLabel2.mas_width);
+        make.height.equalTo(14);
+    }];
+    
+    [_gerRenLabel4 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.gerRenView.mas_bottom).offset(-160/8);
+        make.left.equalTo(self.gerRenView.mas_left).offset(20);
+        make.width.equalTo(self.gerRenLabel4.mas_width);
+        make.height.equalTo(14);
+    }];
+    [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.gerRenView.mas_top).offset(160/8);
+        make.left.equalTo(self.gerRenView.mas_left).offset(120);
+        make.width.equalTo(180);
+        make.height.equalTo(14);
+    }];
+    [_healthLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.gerRenView.mas_centerY).offset(0);
+        make.left.equalTo(self.gerRenView.mas_left).offset(120);
+        make.width.equalTo(180);
+        make.height.equalTo(14);
+    }];
+    
+    
+    
+    [_ageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.gerRenView.mas_bottom).offset(-20);
+        make.left.equalTo(self.gerRenView.mas_left).offset(120);
+        make.width.equalTo(self.ageLabel.mas_width);
+        make.height.equalTo(14);
+    }];
+    
+    [_goYuYueButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.headerView.mas_centerX).offset(0);
+        make.bottom.equalTo(self.headerView.mas_bottom).offset(-64);
+        make.width.equalTo(CoreWidth);
+        make.height.equalTo(40);
+    }];
+}
+
+- (void)goYuYueButtonClick
+{
+    YSTaoCanDetailVC *yue = [[YSTaoCanDetailVC alloc] init];
+    yue.YSDetail_id = [[self.dataDic objectForKey:@"id"] stringValue];
+    [self.navigationController pushViewController:yue animated:YES];
+}
+
+- (void)requestData
+{
+    [ASURLConnection requestAFNJSon:@{@"nanny_id":self.yue_id} method:@"renhe.orderService.nannyDetail" view:self.view version:@"/v3" completeBlock:^(NSData *data, id responseObject) {
+        
+        if ([[ASURLConnection getMsg:responseObject] isEqualToNumber:@1]) {
+           
+            self.dataDic = [[[ASURLConnection doDESDecrypt:responseObject] objectFromJSONString]objectForKey:@"data"][0];
+            
+            self.priceLabel.text = [self.dataDic objectForKey:@"price"];
+            self.ageLabel.text =[[self.dataDic objectForKey:@"age"]stringValue];
+            self.healthLabel.text = [[self.dataDic objectForKey:@"healthy"]stringValue];
+            [self.headerImage sd_setImageWithURL:[NSURL URLWithString:[self.dataDic objectForKey:@"imageUrl"]] placeholderImage:nil];
+        }
+    } errorBlock:^(NSError *error) {
+        
+    }];
+}
+@end

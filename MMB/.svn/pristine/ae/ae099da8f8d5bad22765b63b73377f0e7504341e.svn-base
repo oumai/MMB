@@ -1,0 +1,214 @@
+//
+//  ChooseStateVC.m
+//  Login
+//
+//  Created by Michael on 15/11/6.
+//  Copyright © 2015年 jumper. All rights reserved.
+//
+
+#import "ChooseStateVC.h"
+#import "WYPopoverController.h"
+#import "BirthVC.h"
+#import "PregnancyVC.h"
+#import "AppDelegate.h"
+@interface ChooseStateVC ()<WYPopoverControllerDelegate>
+@property (nonatomic , strong) WYPopoverController *simanPopoverController;
+@property (strong, nonatomic) IBOutlet UILabel *pregnancyLabel;
+@property (strong, nonatomic) IBOutlet UILabel *birthLabel;
+
+@end
+
+@implementation ChooseStateVC
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"loding-5"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+    }
+    return self;
+}
+
+- (void)leftClicked
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = NO;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"选择状态";
+    NavigationBarTitleColor
+    self.pregnancyLabel.textColor = KHexColor(@"#ffffff");
+    self.birthLabel.textColor = KHexColor(@"#ff95a5");
+}
+
+//怀孕
+- (IBAction)pregnanceButtonClick:(UIButton *)sender {
+    
+    
+   
+    //创建弹框
+    PregnancyVC *pregnancy = [PregnancyVC new];//初始化弹框
+    pregnancy.preferredContentSize = CGSizeMake(CoreWidth,350);//设置弹框的大小
+    
+    //弹框消失。
+    [pregnancy setDismissSimanPopoverViewController:^(PregnancyVC *viewController) {
+        [self.simanPopoverController dismissPopoverAnimated:YES completion:^{
+            NSLog(@"dismiss");
+            [self popoverControllerDidDismissPopover:_simanPopoverController];
+        }];
+    }];
+    
+    //确定方法
+    
+    [pregnancy setSureBlock:^{
+        NSLog(@"sure");
+    }];
+    self.simanPopoverController = [[WYPopoverController alloc] initWithContentViewController:pregnancy];
+    self.simanPopoverController.delegate = self;
+    self.simanPopoverController.animationDuration = .5f;
+    self.simanPopoverController.passthroughViews = @[sender];
+    //self.simanPopoverController.popoverLayoutMargins = CoreWidth == 320 ? UIEdgeInsetsMake(400, 10,10, 10) : CoreWidth == 375 ? UIEdgeInsetsMake(667-328-40, 10,10,10) : UIEdgeInsetsMake(717-328-40, 10,10, 10);
+    // self.simanPopoverController.popoverLayoutMargins = CoreWidth == 320 ? UIEdgeInsetsMake(40, 10,200, 10) : CoreWidth == 375 ? UIEdgeInsetsMake(40, 10,667-328-10,10) : UIEdgeInsetsMake(40, 10,717-328-10, 10);
+    self.simanPopoverController.popoverLayoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
+    self.simanPopoverController.wantsDefaultContentAppearance = NO;
+    
+    //设置弹框的主题风格
+    WYPopoverTheme *result = [[WYPopoverTheme alloc] init];
+    result.usesRoundedArrow = YES;
+    result.dimsBackgroundViewsTintColor = YES;
+    result.tintColor = nil;
+    result.outerStrokeColor = [UIColor clearColor];
+    result.innerStrokeColor = [UIColor clearColor];
+    result.fillTopColor = nil;
+    result.fillBottomColor = nil;
+    result.glossShadowColor = nil;
+    result.glossShadowOffset = CGSizeZero;
+    result.glossShadowBlurRadius = 0;
+    result.borderWidth = 0;
+    result.arrowBase = 15;
+    result.arrowHeight = 6;
+    result.outerShadowColor = [UIColor clearColor];
+    result.outerShadowBlurRadius = 0;
+    result.outerShadowOffset = CGSizeZero;
+    result.outerCornerRadius = 5;
+    result.minOuterCornerRadius = 0;
+    result.innerShadowColor = [UIColor clearColor];
+    result.innerShadowBlurRadius = 0;
+    result.innerShadowOffset = CGSizeZero;
+    result.innerCornerRadius = 0;
+    result.viewContentInsets = UIEdgeInsetsZero;
+    result.overlayColor = [UIColor colorWithWhite:0 alpha:0.3];
+    result.preferredAlpha = 1.0f;
+    self.simanPopoverController.theme = result;
+    
+    [_simanPopoverController presentPopoverAsDialogAnimated:YES
+                                                    options:WYPopoverAnimationOptionFadeWithScale];
+}
+
+//已出生
+- (IBAction)birthButtonClick:(UIButton *)sender {
+    
+    //创建弹框
+    BirthVC *simanPopoverViewController = [BirthVC new];//初始化弹框
+    simanPopoverViewController.preferredContentSize = CGSizeMake(CoreWidth,300);//设置弹框的大小
+    
+    //弹框消失。
+    [simanPopoverViewController setDismissSimanPopoverViewController:^(BirthVC *viewController) {
+        [self.simanPopoverController dismissPopoverAnimated:YES completion:^{
+            NSLog(@"dismiss");
+            if (self.tabBarBlock) {
+                self.tabBarBlock();
+            }
+            [self popoverControllerDidDismissPopover:_simanPopoverController];
+        }];
+    }];
+    
+    //确定方法
+    
+    [simanPopoverViewController setSureBlock:^{
+        
+        if (self.tabBarBlock)//跳到主页面
+        {
+            self.tabBarBlock();
+        }
+    }];
+    self.simanPopoverController = [[WYPopoverController alloc] initWithContentViewController:simanPopoverViewController];
+    self.simanPopoverController.delegate = self;
+    self.simanPopoverController.animationDuration = .5f;
+    self.simanPopoverController.passthroughViews = @[sender];
+    //self.simanPopoverController.popoverLayoutMargins = CoreWidth == 320 ? UIEdgeInsetsMake(240, 10,10, 10) : CoreWidth == 375 ? UIEdgeInsetsMake(667-328, 10,10,10) : UIEdgeInsetsMake(717-328, 10,10, 10);
+    self.simanPopoverController.popoverLayoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
+    self.simanPopoverController.wantsDefaultContentAppearance = NO;
+    
+    //设置弹框的主题风格
+    WYPopoverTheme *result = [[WYPopoverTheme alloc] init];
+    result.usesRoundedArrow = YES;
+    result.dimsBackgroundViewsTintColor = YES;
+    result.tintColor = nil;
+    result.outerStrokeColor = [UIColor clearColor];
+    result.innerStrokeColor = [UIColor clearColor];
+    result.fillTopColor = nil;
+    result.fillBottomColor = nil;
+    result.glossShadowColor = nil;
+    result.glossShadowOffset = CGSizeZero;
+    result.glossShadowBlurRadius = 0;
+    result.borderWidth = 0;
+    result.arrowBase = 15;
+    result.arrowHeight = 6;
+    result.outerShadowColor = [UIColor clearColor];
+    result.outerShadowBlurRadius = 0;
+    result.outerShadowOffset = CGSizeZero;
+    result.outerCornerRadius = 5;
+    result.minOuterCornerRadius = 0;
+    result.innerShadowColor = [UIColor clearColor];
+    result.innerShadowBlurRadius = 0;
+    result.innerShadowOffset = CGSizeZero;
+    result.innerCornerRadius = 0;
+    result.viewContentInsets = UIEdgeInsetsZero;
+    result.overlayColor = [UIColor colorWithWhite:0 alpha:0.3];
+    result.preferredAlpha = 1.0f;
+    self.simanPopoverController.theme = result;
+    [_simanPopoverController presentPopoverAsDialogAnimated:YES
+                                                    options:WYPopoverAnimationOptionFadeWithScale];
+}
+
+
+
+#pragma mark - WYPopoverControllerDelegate
+- (void)popoverControllerDidPresentPopover:(WYPopoverController *)controller
+{
+    NSLog(@"popoverControllerDidPresentPopover");
+}
+
+- (BOOL)popoverControllerShouldDismissPopover:(WYPopoverController *)controller
+{
+    return YES;//点击其他地方，弹框消失
+}
+
+- (void)popoverControllerDidDismissPopover:(WYPopoverController *)controller
+{
+    
+    self.simanPopoverController.delegate = nil;
+    NSLog(@"popoverControllerDidDismissPopover");
+}
+
+- (BOOL)popoverControllerShouldIgnoreKeyboardBounds:(WYPopoverController *)popoverController
+{
+    return NO;
+}
+
+- (void)popoverController:(WYPopoverController *)popoverController willTranslatePopoverWithYOffset:(float *)value
+{
+    // keyboard is shown and the popover will be moved up by 163 pixels for example ( *value = 163 )
+    *value = 0; // set value to 0 if you want to avoid the popover to be moved
+}
+#pragma mark ------------------------------------------------------  popoverActionsEnd--------------------------
+
+@end

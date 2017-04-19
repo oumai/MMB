@@ -1,0 +1,130 @@
+//
+//  EvaluateVC.m
+//  Mamabao
+//
+//  Created by Michael on 15/11/11.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+#import "EvaluateVC.h"
+
+@interface EvaluateVC ()
+
+@property (strong, nonatomic) IBOutlet UIView *servicesCenterView;
+@property (strong, nonatomic) IBOutlet UITextView *pingjiaTF;
+@property (strong, nonatomic) IBOutlet UIButton *madButton;
+@property (strong, nonatomic) IBOutlet UIButton *mediumButton;
+@property (strong, nonatomic) IBOutlet UIButton *goodButton;
+@property (strong, nonatomic) IBOutlet UIView *yueSaoPingView;
+@property (strong, nonatomic) IBOutlet UITextView *yuesaoPijngTV;
+@property (strong, nonatomic) IBOutlet UIButton *yuesaoMadButton;
+@property (strong, nonatomic) IBOutlet UIButton *yueSaoMediumButton;
+@property (strong, nonatomic) IBOutlet UIButton *yueSaoGoodButton;
+@property (strong, nonatomic) IBOutlet UIButton *submitButton;
+
+
+
+@end
+
+@implementation EvaluateVC
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"loding-5"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+    }
+    return self;
+}
+
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"评价";
+    NavigationBarTitleColor
+    self.menuController.panEnabel = NO;
+    self.view.backgroundColor = KHexColor(@"#f5f5f5");
+    
+    
+    self.servicesCenterView.layer.cornerRadius = 3;
+    self.servicesCenterView.layer.masksToBounds = YES;
+    self.servicesCenterView.layer.borderColor = KHexColor(@"#e6e6e6").CGColor;
+    self.servicesCenterView.layer.borderWidth = 1;
+    
+    self.pingjiaTF.layer.cornerRadius = 5;
+    self.pingjiaTF.layer.masksToBounds = YES;
+    self.pingjiaTF.layer.borderColor = KHexColor(@"#cdcdcd").CGColor;
+    self.pingjiaTF.layer.borderWidth = 1;
+    
+    [self.madButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.mediumButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.goodButton setTitleColor:KHexColor(@"#ff657f") forState:UIControlStateNormal];
+    
+    
+    self.yueSaoPingView.layer.cornerRadius = 3;
+    self.yueSaoPingView.layer.masksToBounds = YES;
+    self.yueSaoPingView.layer.borderColor = KHexColor(@"#e6e6e6").CGColor;
+    self.yueSaoPingView.layer.borderWidth = 1;
+    
+    self.yuesaoPijngTV.layer.cornerRadius = 5;
+    self.yuesaoPijngTV.layer.masksToBounds = YES;
+    self.yuesaoPijngTV.layer.borderColor = KHexColor(@"#cdcdcd").CGColor;
+    self.yuesaoPijngTV.layer.borderWidth = 1;
+    
+    [self.yuesaoMadButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.yueSaoMediumButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.yueSaoGoodButton setTitleColor:KHexColor(@"#ff657f") forState:UIControlStateNormal];
+
+  
+    self.submitButton.layer.cornerRadius = 5;
+    self.submitButton.layer.masksToBounds = YES;
+    [self.submitButton setBackgroundImage:[UIImage createImageWithColor:KHexColor(@"#ff92a5")] forState:UIControlStateNormal];
+}
+
+
+- (void)leftClicked
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+//评价
+- (IBAction)madButton:(UIButton *)sender {
+    [self.madButton setTitleColor:KHexColor(@"#ff657f") forState:UIControlStateNormal];
+    [self.mediumButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.goodButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+}
+- (IBAction)mediumButton:(UIButton *)sender {
+    [self.madButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.mediumButton setTitleColor:KHexColor(@"#ff657f") forState:UIControlStateNormal];
+    [self.goodButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+}
+- (IBAction)goodButton:(UIButton *)sender {
+    [self.madButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.mediumButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.goodButton setTitleColor:KHexColor(@"#ff657f") forState:UIControlStateNormal];
+}
+
+//月嫂评价
+- (IBAction)ysMadButtonClick:(UIButton *)sender {
+    [self.yuesaoMadButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.yueSaoMediumButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.yueSaoGoodButton setTitleColor:KHexColor(@"#ff657f") forState:UIControlStateNormal];
+}
+- (IBAction)ysMediumButtonClick:(UIButton *)sender {
+    [self.yuesaoMadButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.yueSaoMediumButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.yueSaoGoodButton setTitleColor:KHexColor(@"#ff657f") forState:UIControlStateNormal];
+}
+
+- (IBAction)ysGoodButtonClick:(UIButton *)sender {
+    [self.yuesaoMadButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.yueSaoMediumButton setTitleColor:KHexColor(@"#666666") forState:UIControlStateNormal];
+    [self.yueSaoGoodButton setTitleColor:KHexColor(@"#ff657f") forState:UIControlStateNormal];
+}
+//提交
+- (IBAction)submitButtonClick:(UIButton *)sender {
+}
+
+
+@end

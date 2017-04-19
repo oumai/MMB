@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChooseStateVC">
+            <connections>
+                <outlet property="birthLabel" destination="Gdj-Ye-6JR" id="7tH-jA-AXW"/>
+                <outlet property="pregnancyLabel" destination="hIb-E9-EZ6" id="5q6-KI-VdG"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chose-background" translatesAutoresizingMaskIntoConstraints="NO" id="UJd-dL-hsr">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <animations/>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="omw-Up-BaZ">
+                    <rect key="frame" x="85" y="133" width="61" height="61"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="61" id="QFH-23-IUb"/>
+                        <constraint firstAttribute="height" constant="61" id="nzI-oW-NV1"/>
+                    </constraints>
+                    <state key="normal" backgroundImage="chose-1"/>
+                    <connections>
+                        <action selector="pregnanceButtonClick:" destination="-1" eventType="touchUpInside" id="wkY-gL-v1p"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mfS-3Y-3YH">
+                    <rect key="frame" x="174" y="402" width="61" height="61"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="61" id="7yc-eF-x4m"/>
+                        <constraint firstAttribute="width" constant="61" id="lYp-ty-zCB"/>
+                    </constraints>
+                    <state key="normal" backgroundImage="chose-2"/>
+                    <connections>
+                        <action selector="birthButtonClick:" destination="-1" eventType="touchUpInside" id="Tgj-ux-bvx"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="怀孕中" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hIb-E9-EZ6">
+                    <rect key="frame" x="94" y="202" width="42" height="21"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="42" id="Nl8-Ti-L7W"/>
+                        <constraint firstAttribute="height" constant="21" id="kcS-Hr-CuA"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="宝宝已出生" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gdj-Ye-6JR">
+                    <rect key="frame" x="171" y="471" width="66" height="21"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="66" id="UY2-MG-mz1"/>
+                        <constraint firstAttribute="height" constant="21" id="n8k-y1-66q"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="hIb-E9-EZ6" secondAttribute="trailing" constant="184" id="J1k-0Z-96n"/>
+                <constraint firstItem="UJd-dL-hsr" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="JZh-z1-ckQ"/>
+                <constraint firstAttribute="trailing" secondItem="UJd-dL-hsr" secondAttribute="trailing" id="MWd-4k-dpl"/>
+                <constraint firstItem="omw-Up-BaZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="133" id="O0A-fY-A04"/>
+                <constraint firstItem="Gdj-Ye-6JR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="171" id="OOe-Z8-Dvn"/>
+                <constraint firstItem="UJd-dL-hsr" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Pur-hQ-0rt"/>
+                <constraint firstItem="Gdj-Ye-6JR" firstAttribute="top" secondItem="mfS-3Y-3YH" secondAttribute="bottom" constant="8" id="cg7-0J-N3Y"/>
+                <constraint firstItem="mfS-3Y-3YH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="174" id="jws-Zy-XfY"/>
+                <constraint firstAttribute="bottom" secondItem="mfS-3Y-3YH" secondAttribute="bottom" constant="105" id="m2I-MH-DFc"/>
+                <constraint firstAttribute="trailing" secondItem="omw-Up-BaZ" secondAttribute="trailing" constant="174" id="oVs-23-T3S"/>
+                <constraint firstAttribute="bottom" secondItem="UJd-dL-hsr" secondAttribute="bottom" id="qXJ-IO-TY9"/>
+                <constraint firstItem="hIb-E9-EZ6" firstAttribute="top" secondItem="omw-Up-BaZ" secondAttribute="bottom" constant="8" id="sdF-gU-VrU"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="chose-1" width="61" height="61"/>
+        <image name="chose-2" width="59" height="59"/>
+        <image name="chose-background" width="320" height="568"/>
+    </resources>
+</document>

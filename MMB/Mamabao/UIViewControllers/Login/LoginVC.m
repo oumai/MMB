@@ -1,0 +1,206 @@
+//
+//  LoginVC.m
+//  Login
+//
+//  Created by Michael on 15/11/6.
+//  Copyright © 2015年 jumper. All rights reserved.
+//
+
+#import "LoginVC.h"
+#import "ForgetPasswordVC.h"
+#import "RegisterVC.h"
+@interface LoginVC ()
+@property (strong, nonatomic) IBOutlet UIView *dimView;
+@property (strong, nonatomic) IBOutlet UIView *numberView;
+@property (strong, nonatomic) IBOutlet UIView *passwordView;
+@property (strong, nonatomic) IBOutlet UIButton *loginButton;
+@property (strong, nonatomic) IBOutlet UIButton *registButton;
+@property (strong, nonatomic) IBOutlet UIButton *forgetButton;
+@property (strong, nonatomic) IBOutlet UITextField *numberTF;
+@property (strong, nonatomic) IBOutlet UITextField *passwordTF;
+@property (strong, nonatomic) IBOutlet UIButton *buttonTitle;
+
+
+
+
+@property (strong, nonatomic) IBOutlet UIButton *goLookButton;
+@property (strong, nonatomic)  UILabel *goLookLine;
+
+@end
+
+@implementation LoginVC
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = YES;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+//    [ASURLConnection requestAFNJSon:@{} method:@"jumper.clinic.doctor.getClinicRuleList" completeBlock:^(NSData *data, id responseObject) {
+//        
+//        if ([[ASURLConnection getMsg:responseObject] isEqualToNumber:@1]) {
+//            NSArray *array = [[[ASURLConnection doDESDecrypt:responseObject] objectFromJSONString] objectForKey:@"data"];
+//            for (int i = 0; i < array.count; i++)
+//            {
+//                
+//            }
+//            
+//        }
+//    } errorBlock:^(NSError *error) {
+//        
+//    }];
+
+    
+    self.dimView.backgroundColor = KHexColor(@"#ffe3e8");
+    //隐藏键盘手势
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backTap:)];
+    [self.view addGestureRecognizer:tap];
+    
+    self.numberView.backgroundColor = KHexColor(@"#ffffff");
+    self.numberView.layer.cornerRadius = 5;
+    self.numberView.layer.masksToBounds = YES;
+    
+    self.numberTF.placeholder = @"电话号码";
+    self.numberTF.textColor = KHexColor(@"#ff7187");
+    self.numberTF.keyboardType = UIKeyboardTypeNumberPad;
+    [self.numberTF setValue:KHexColor(@"#ff7187") forKeyPath:@"_placeholderLabel.textColor"];           //设置placeholder的字体颜色
+    [self.numberTF setValue:[UIFont boldSystemFontOfSize:14] forKeyPath:@"_placeholderLabel.font"];
+    
+    self.passwordView.backgroundColor = KHexColor(@"#ffffff");
+    self.passwordView.layer.cornerRadius = 5;
+    self.passwordView.layer.masksToBounds = YES;
+    
+    
+    self.passwordTF.placeholder = @"密码";
+    self.passwordTF.textColor = KHexColor(@"#ff7187");
+    self.passwordTF.secureTextEntry = YES;
+    [self.passwordTF setValue:KHexColor(@"#ff7187") forKeyPath:@"_placeholderLabel.textColor"];
+    [self.passwordTF setValue:[UIFont boldSystemFontOfSize:14] forKeyPath:@"_placeholderLabel.font"];
+
+    
+    self.loginButton.layer.cornerRadius = 5;
+    self.loginButton.layer.masksToBounds = YES;
+    [self.loginButton setBackgroundImage:[UIImage createImageWithColor:KHexColor(@"#ff5872")] forState:UIControlStateNormal];
+    
+    [self.registButton setTitleColor:KHexColor(@"#a97a82") forState:UIControlStateNormal];
+    [self.forgetButton setTitleColor:KHexColor(@"#a97a82") forState:UIControlStateNormal];
+    
+    //第三方登录
+    [self.buttonTitle setTitleColor:KHexColor(@"#ffffff") forState:UIControlStateNormal];
+    
+    
+    
+    //去逛逛
+    self.goLookButton.enabled = NO;
+    [self.goLookButton setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];  //KHexColor(@"#ff95a5")
+    [self.goLookButton setTitleColor:[UIColor clearColor] forState:(UIControlStateHighlighted)];//KHexColor(@"#ffffff")
+    self.goLookButton.showsTouchWhenHighlighted = YES;
+    
+    self.goLookLine = [UILabel new];
+    self.goLookLine.backgroundColor = [UIColor clearColor];//KHexColor(@"#ff95a5");
+    [self.view addSubview:_goLookLine];
+    
+    [_goLookLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.goLookButton.mas_bottom).offset(-6);
+        make.centerX.equalTo(self.view.mas_centerX).offset(0);
+        make.width.equalTo(60);
+        make.height.equalTo(1);
+    }];
+}
+//隐藏键盘手势
+-(void)backTap:(UITapGestureRecognizer *)tap{
+    [self.view endEditing:YES];
+    if(self.view.frame.origin.y == -100+64){
+        [UIView animateWithDuration:0.2 animations:^{
+            self.view.frame = CGRectMake(0, self.view.frame.origin.y+100, kSCREEN_WIDTH, self.view.frame.size.height);
+        }];
+    }
+}
+
+//登录
+- (IBAction)Login:(UIButton *)sender {
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:JumpWindow object:nil userInfo:nil];
+
+    
+    if ([self.numberTF.text stringByReplacingOccurrencesOfString:@" " withString:@""].length!=11)
+    {
+        k_yjHUD(@"请输入11位手机号码", self.view);
+    }else if (self.passwordTF.text.length<6||self.passwordTF.text.length>12)
+    {
+        k_yjHUD(@"密码长度为6~12位", self.view);
+
+    }else
+    {
+        
+        NSDictionary *json = @{@"user_name":[self.numberTF.text stringByReplacingOccurrencesOfString:@" " withString:@""],
+                               @"password":self.passwordTF.text,
+                               @"mobile_type":@1,
+                               };
+        [ASLoadingView showActivity:self.navigationController.view];
+        [ASURLConnection requestAFNJSon:json method:kLogin completeBlock:^(NSData *data, id responseObject) {
+            
+            [ASLoadingView hidenActivity:self.navigationController.view];
+            
+            if ([[ASURLConnection getMsg:responseObject] isEqual:@0])
+            {
+                
+                k_NSlogHUD([ASURLConnection getMessage:responseObject]);
+                
+            }
+            else if ([[ASURLConnection getMsg:responseObject] isEqual:@1])
+            {
+                
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"V3.1Guide"];
+                
+                ASUserInfoModel *model = [ASUserInfoModel objectWithKeyValues:AFNdata[0]];
+                model.isLogin = YES;
+                [model saveMessageToLocation];
+                //跳转到TabBar
+                [[NSNotificationCenter defaultCenter] postNotificationName:JumpWindow object:nil userInfo:nil];
+                if (self.myBlock) {
+                    self.myBlock();
+                }
+               
+            }
+        } errorBlock:^(NSError *error) {
+            [ASLoadingView hidenActivity:self.navigationController.view];
+        }];
+    }
+
+}
+
+- (IBAction)Register:(UIButton *)sender {
+    RegisterVC *regist = [RegisterVC new];
+    [self.navigationController pushViewController:regist animated:YES];
+    
+}
+
+- (IBAction)ForgetPassword:(UIButton *)sender {
+    ForgetPasswordVC *forget = [ForgetPasswordVC new];
+    [self.navigationController pushViewController:forget animated:YES];
+}
+//微信 ,qq,微博
+- (IBAction)weChatButtonClick:(UIButton *)sender {
+    NSLog(@"weChatButtonClick");
+}
+
+- (IBAction)qqButtonClick:(UIButton *)sender {
+     NSLog(@"qqButtonClick");
+}
+
+- (IBAction)weiBo:(UIButton *)sender{
+     NSLog(@"weiBo");
+}
+//去逛逛
+- (IBAction)goLookButtonClick:(UIButton *)sender
+{
+    
+//    if (self.myBlock) {
+//        self.myBlock();
+//    }
+}
+@end

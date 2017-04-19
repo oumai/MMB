@@ -1,0 +1,91 @@
+//
+//  Mamabao.pch
+//  Mamabao
+//
+//  Created by Michael on 15/10/26.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+#ifndef Mamabao_pch
+#define Mamabao_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+
+
+
+
+#define MAS_SHORTHAND
+#define MAS_SHORTHAND_GLOBALS
+#define CoreWidth [UIScreen mainScreen].bounds.size.width
+#define CoreHeight [UIScreen mainScreen].bounds.size.height
+#define kSCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
+#define kSCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
+#define KHexColor(stringColor) [UIColor colorForHexString:stringColor]
+#define KFontSize(font) [UIFont systemFontOfSize:font]
+
+#import "Masonry.h"
+#import "UIColor+HNExtensions.h"
+#import "UILabel+Siman.h"
+#import "UIButton+SQTool.h"
+#import "UIImage+Tool.h"
+#import "NSString+SQTool.h"
+#import "NSAttributedString+ParagraphStyle.h"
+#import "UIButton+Tool.h"
+#import "TTTAttributedLabel.h"
+#import "ZYMenuController.h"        //侧滑
+#import "ViewPagerController.h"     //scrollView
+#import "PlaceholderTextView.h"
+#import "UIImageView+WebCache.h"
+
+
+#import "API.h"
+#import "ASWXHeader.h"
+#import "Request.h"
+#import "DesEncrypt.h"               //加密
+#import "JSONKit.h"
+#import "ASLoadingView.h"
+#import "ASURLConnection.h"
+#import "ASHUDView.h"               //警告框
+#import "AFMInfoBanner.h"
+#import "SVProgressHUD.h"           //菊花
+#import "MBProgressHUD.h"
+#import "UIImageView+WebCache.h"    //加载图片
+#import "MJRefresh.h"               //下拉刷新，上拉加载
+#import "MJExtension.h"             //解析请求出来的数据
+#import "NSString+ASNSStringCategory.h" //category2
+#import "ASUserInfoModel.h"         //用户信息
+#import "RMMapper.h"                //储存到本地
+#import "ASDayPicker.h"             //滑动的时间
+
+
+//NSLOG
+#define k_NslogDesData  NSLog(@"%@",[ASURLConnection doDESDecrypt:responseObject]);
+#define k_NslogError      NSLog(@"%@",@"连接失败,请检查网络");
+#define kUploadImg        @"jumper.interaction.image.upload"
+#define k_firstTorenzheng @"请先进行医生资格认证"
+
+//HUD
+#define k_NSlogHUD(string) [AFMInfoBanner showAndHideWithText:string style:AFMInfoBannerStyleInfo];
+#define k_SVprogressHUD  [SVProgressHUD show];
+#define k_SVprogressDisMiss [SVProgressHUD dismiss];
+#define k_yjHUD(string,view)  [ASHUDView showString:string andView:view];
+
+//COLOR
+#define BaseColor [UIColor colorWithRed:255/255.f green:110/255.f blue:127/255.f alpha:1.0]
+#define RGBA(A,B,C,D) [UIColor colorWithRed:A/255.f green:B/255.f blue:C/255.f alpha:D]
+#define kImage(string)  [UIImage imageNamed:string]
+
+
+//MySet
+#define NavigationBarTitleColor  [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:19],NSForegroundColorAttributeName:KHexColor(@"#ffffff")}];//导航条标题颜色
+#define PanBack  UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panClick)];[self.view addGestureRecognizer:pan]; //手势返回
+#define PanBackClick   - (void)panClick{[self.navigationController popViewControllerAnimated:YES];} 
+#define JumpWindow    @"jumpWindow"
+#define Zhuxiaodenglu @"zhuxiaodenglu"
+
+#import "WYPopoverController.h"       //popView
+#import "WYStoryboardPopoverSegue.h"  //popView
+
+#endif /* Mamabao_pch */

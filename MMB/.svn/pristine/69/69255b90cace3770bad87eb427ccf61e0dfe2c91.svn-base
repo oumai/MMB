@@ -1,0 +1,233 @@
+
+//
+//  FetalHeartDataVC.m
+//  Mamabao
+//
+//  Created by Michael on 15/11/17.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+/*-----------------------------------------------------------------------M-------------------------------------------*/
+
+
+@interface FetalHeartDataModel: NSObject
+- (instancetype)initWithDictionary:(NSDictionary *)dic;
+
+@end
+
+
+
+@interface FetalHeartDataModel ()
+
+@end
+
+@implementation FetalHeartDataModel
+
+- (instancetype)initWithDictionary:(NSDictionary *)dic
+{
+    if (self == [super init]) {
+        
+        
+        
+    }
+    return self;
+}
+
+@end
+
+
+/*-----------------------------------------------------------------------V-------------------------------------------*/
+
+
+
+@interface FetalHeartDataCustomCell : UITableViewCell
+
+@property (nonatomic, strong) UIView *cellView;
+@end
+
+
+
+@interface FetalHeartDataCustomCell ()
+
+@property (nonatomic, strong) TTTAttributedLabel *numberLabel;
+@property (nonatomic, strong) TTTAttributedLabel *pingjunLabel;
+@property (nonatomic, strong) TTTAttributedLabel *dateLabel;
+@property (nonatomic, strong) UIImageView *iconImage;
+@property (nonatomic, strong) UIImageView *bodongImage;
+@end
+
+@implementation FetalHeartDataCustomCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+
+{
+    if (self == [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        self.backgroundColor = KHexColor(@"#f5f5f5");
+        self.cellView = [UIView new];
+        self.cellView.backgroundColor = KHexColor(@"#ffffff");
+        self.cellView.layer.cornerRadius = 5;
+        self.cellView.layer.masksToBounds = YES;
+        self.cellView.layer.borderColor = KHexColor(@"#e6e6e6").CGColor;
+        self.cellView.layer.borderWidth = 1;
+        [self.contentView addSubview:_cellView];
+        
+              
+        self.numberLabel = [TTTAttributedLabel new];
+        self.numberLabel.font = KFontSize(20);
+        self.numberLabel.textColor = KHexColor(@"#999999");
+        self.numberLabel.text = @"143";
+        [self.cellView addSubview:_numberLabel];
+             self.pingjunLabel = [TTTAttributedLabel new];
+        self.pingjunLabel.font = KFontSize(13);
+        self.pingjunLabel.textColor = KHexColor(@"#808080");
+        NSString *string = @"已上传";
+        self.pingjunLabel.text = [NSString stringWithFormat:@"平均心率 %@",string];
+        [self.cellView addSubview:_pingjunLabel];
+        
+                
+        self.dateLabel = [TTTAttributedLabel new];
+        self.dateLabel.font = KFontSize(13);
+        self.dateLabel.textColor = KHexColor(@"#d1d1d1");
+        NSString *stringDate = @"2015-08-08";
+        self.dateLabel.text = [NSString stringWithFormat:@"%@",stringDate];
+        [self.cellView addSubview:_dateLabel];
+        
+     
+        self.iconImage = [UIImageView new];
+        self.iconImage.image = [UIImage imageNamed:@"5-9-monitor"];
+        [self.cellView addSubview:_iconImage];
+        
+        
+        self.bodongImage = [UIImageView new];
+        self.bodongImage.image = [UIImage imageNamed:@"5-8-monitor"];
+        [self.cellView addSubview:_bodongImage];
+        
+        [_cellView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView.mas_top).offset(0);
+            make.left.equalTo(self.contentView.mas_left).offset(7);
+            make.bottom.equalTo(self.contentView.mas_bottom).offset(-7);
+            make.right.equalTo(self.contentView.mas_right).offset(-7);
+            
+        }];
+        
+        [_numberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.left.equalTo(7);
+            make.width.equalTo(self.numberLabel.mas_width);
+            make.height.equalTo(20);
+        }];
+        
+        [_pingjunLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.numberLabel.mas_right).offset(15);
+            make.bottom.equalTo(self.numberLabel.mas_bottom).offset(0);
+            make.width.equalTo(self.pingjunLabel.mas_width);
+            make.height.equalTo(13);
+        }];
+        [_dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self.cellView.mas_right).offset(-10);
+            make.bottom.equalTo(self.cellView.mas_bottom).offset(-10);
+            make.width.equalTo(self.dateLabel.mas_width);
+            make.height.equalTo(13);
+        }];
+        
+        [_iconImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.cellView.mas_centerY).offset(0);
+            make.left.equalTo(self.numberLabel.mas_left).offset(0);
+            make.width.equalTo(22);
+            make.height.equalTo(17.5);
+        }];
+
+        
+        [_bodongImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.cellView.mas_centerY).offset(15);
+            make.centerX.equalTo(self.cellView.mas_centerX).offset(0);
+            make.width.equalTo(90);
+            make.height.equalTo(30);
+        }];
+
+
+    }
+    return self;
+}
+
+
+
+
+
+@end
+
+
+/*-----------------------------------------------------------------------C-------------------------------------------*/
+
+#import "FetalHeartDataVC.h"
+
+@interface FetalHeartDataVC ()<UITableViewDataSource,UITableViewDelegate>
+@property (nonatomic, strong) UITableView *tableView;
+
+@end
+
+@implementation FetalHeartDataVC
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"loding-5"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+    }
+    return self;
+}
+
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"胎心数据";
+    NavigationBarTitleColor
+    self.menuController.panEnabel = NO;
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStylePlain)];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.rowHeight = 90;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:_tableView];
+    
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.bottom.right.equalTo(self.view);
+    }];
+}
+#pragma mark ------------------------------------------------------------------Actions  ButtonClick-----------------------------------------------------------
+
+- (void)leftClicked
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+#pragma mark ------------------------------------------------------------------UITableViewDatasource Delegate-------------------------------------------------
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 7;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *identifier = @"cell";
+    FetalHeartDataCustomCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (nil == cell) {
+        cell = [[FetalHeartDataCustomCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifier];
+    }
+    
+    return cell;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    
+}
+@end
+

@@ -1,0 +1,15 @@
+//
+//  ChanJianTimesVC.h
+//  Mamabao
+//
+//  Created by Michael on 15/12/2.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface ChanJianTimesVC : UIViewController
+
+@property (nonatomic, assign) NSInteger checkId;
+
+@end

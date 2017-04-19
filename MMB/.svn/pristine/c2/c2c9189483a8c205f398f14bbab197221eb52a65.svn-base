@@ -1,0 +1,256 @@
+//
+//  SettingCenterVC.m
+//  Mamabao
+//
+//  Created by Michael on 15/11/12.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+/*-----------------------------------------------------------------------M-------------------------------------------*/
+
+
+@interface SettingCenterModel: NSObject
+- (instancetype)initWithDictionary:(NSDictionary *)dic;
+
+@end
+
+
+
+@interface SettingCenterModel ()
+
+@end
+
+@implementation SettingCenterModel
+
+- (instancetype)initWithDictionary:(NSDictionary *)dic
+{
+    if (self == [super init]) {
+        
+        
+        
+    }
+    return self;
+}
+
+@end
+
+
+/*-----------------------------------------------------------------------V-------------------------------------------*/
+
+
+
+@interface SettingCenterCustomCell : UITableViewCell
+
+
+@end
+
+
+
+@interface SettingCenterCustomCell ()
+
+@property (nonatomic, strong) UIView *line;
+@property (nonatomic, strong) UIImageView *switchImage;
+@property (nonatomic, strong) TTTAttributedLabel *titleLabel;
+@property (nonatomic, strong) TTTAttributedLabel *vLabel;
+@end
+
+@implementation SettingCenterCustomCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+
+{
+    if (self == [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        self.line = [UIView new];
+        self.line.backgroundColor = KHexColor(@"#ececec");
+        [self.contentView addSubview:_line];
+        
+               
+        
+        self.titleLabel = [TTTAttributedLabel new];
+        self.titleLabel.textColor = KHexColor(@"#111111");
+        self.titleLabel.font = KFontSize(14);
+        [self.contentView addSubview:_titleLabel];
+        
+              
+        self.vLabel = [TTTAttributedLabel new];
+        self.vLabel.textColor = KHexColor(@"#8b8a8b");
+        self.vLabel.font = KFontSize(14);
+        [self.contentView addSubview:_vLabel];
+        
+        
+        self.switchImage = [UIImageView new];
+        self.switchImage.image = [UIImage imageNamed:@""];
+        [self.contentView addSubview:_switchImage];
+        
+        [_line mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView.mas_bottom).offset(-1);
+            make.left.equalTo(self.contentView.mas_left).offset(20);
+            make.right.equalTo(self.contentView.mas_right).offset(-20);
+            make.height.equalTo(0.5);
+            
+        }];
+        [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView.mas_centerY).offset(0);
+            make.left.equalTo(self.contentView.mas_left).offset(20);
+            make.width.equalTo(self.titleLabel.mas_width);
+            make.height.equalTo(14);
+            
+        }];
+        [_vLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView.mas_centerY).offset(0);
+            make.left.equalTo(self.titleLabel.mas_right).offset(10);
+            make.width.equalTo(self.vLabel.mas_width);
+            make.height.equalTo(14);
+            
+        }];
+
+        
+        [_switchImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView.mas_centerY).offset(0);
+            make.right.equalTo(self.contentView.mas_right).offset(-10);
+            make.width.equalTo(30);
+            make.height.equalTo(14);
+            
+        }];
+    }
+    return self;
+}
+
+
+
+
+
+@end
+
+
+/*-----------------------------------------------------------------------C-------------------------------------------*/
+
+#import "SettingCenterVC.h"
+#import "FeedBackVC.h"
+@interface SettingCenterVC ()<UITableViewDataSource,UITableViewDelegate>
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIButton *zhuXiaoButton;
+@end
+
+@implementation SettingCenterVC
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"loding-5"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+    }
+    return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = NO;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"设置中心";
+    NavigationBarTitleColor
+    self.menuController.panEnabel = NO;
+    self.view.backgroundColor = KHexColor(@"#f0f0f0");
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStylePlain)];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.backgroundColor = KHexColor(@"#f0f0f0");
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:_tableView];
+    
+    
+    self.zhuXiaoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.zhuXiaoButton.titleLabel.font = KFontSize(15);
+    self.zhuXiaoButton.layer.cornerRadius = 8;
+    self.zhuXiaoButton.layer.masksToBounds = YES;
+    [self.zhuXiaoButton setTitle:@"注销登录" forState:UIControlStateNormal];
+    [self.zhuXiaoButton setTitleColor:KHexColor(@"#ffffff") forState:UIControlStateNormal];
+    [self.zhuXiaoButton setBackgroundImage:[UIImage createImageWithColor:KHexColor(@"#ff637e")] forState:UIControlStateNormal];
+    [self.zhuXiaoButton addTarget:self action:@selector(zhuXiaoButtonClik) forControlEvents:UIControlEventTouchUpInside];
+    [self.tableView addSubview:_zhuXiaoButton];
+    
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.bottom.right.equalTo(self.view);
+    }];
+
+    
+    [_zhuXiaoButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.tableView.mas_top).offset(200);
+        make.centerX.equalTo(self.view.mas_centerX).offset(0);
+        make.left.equalTo(self.tableView.mas_left).offset(40);
+        make.right.equalTo(self.tableView.mas_right).offset(-40);
+        make.height.equalTo(40);
+    }];
+
+}
+#pragma mark ------------------------------------------------------------------Actions  ButtonClick-----------------------------------------------------------
+- (void)zhuXiaoButtonClik
+{
+    
+}
+- (void)sectionButtonClick
+{
+    
+}
+- (void)leftClicked
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+#pragma mark ------------------------------------------------------------------UITableViewDatasource Delegate-------------------------------------------------
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 4;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *identifier = @"cell";
+    SettingCenterCustomCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (nil == cell) {
+        cell = [[SettingCenterCustomCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifier];
+    }
+    
+    if (indexPath.row == 3
+        ) {
+        cell.vLabel.text = @"V1.2";
+    }
+    NSArray *titleArray  = @[@"消息提醒",@"意见反馈",@"联系客服",@"更新检查"];
+    cell.titleLabel.text = titleArray[indexPath.row];
+    
+    return cell;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (indexPath.row == 1) {
+        FeedBackVC *feed = [FeedBackVC new];
+        [self.navigationController pushViewController:feed animated:YES];
+    }
+    else if (indexPath.row == 2)
+    {
+        NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"telprompt://%@",@"888-888-8888"];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+        
+        
+    }
+}
+@end
+
+
+
+
+

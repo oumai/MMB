@@ -1,0 +1,282 @@
+//
+//  HealthSurveyVC.m
+//  Benevolence
+//
+//  Created by Michael on 15/10/27.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+/*-----------------------------------------------------------------------M-------------------------------------------*/
+@interface HealthSurveyModel  : NSObject
+@property (nonatomic, strong) NSString *titleName;
+@property (nonatomic, strong) NSString *iconName;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dic;
+
+@end
+
+
+
+@interface HealthSurveyModel ()
+
+@end
+
+@implementation HealthSurveyModel
+
+- (instancetype)initWithDictionary:(NSDictionary *)dic
+{
+    if (self == [super init]) {
+        
+    }
+    return self;
+}
+
+@end
+
+
+/*-----------------------------------------------------------------------V-------------------------------------------*/
+@interface HealthSurveyCustomCell : UICollectionViewCell
+
+@property (nonatomic, strong) NSString *bgName;
+
+@end
+
+
+
+@interface HealthSurveyCustomCell ()
+
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UIImageView *bgImage;
+@property (nonatomic, strong) UIImageView *iconImage;
+@property (nonatomic, strong) TTTAttributedLabel *stateLabel;
+@end
+
+@implementation HealthSurveyCustomCell
+
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self == [super initWithFrame:frame]) {
+        
+        self.backgroundColor = [UIColor whiteColor];
+        self.layer.cornerRadius = 5;
+        self.layer.masksToBounds = YES;
+        
+        self.bgImage = [UIImageView new];
+        [self.contentView addSubview:_bgImage];
+        
+        
+        self.stateLabel = [TTTAttributedLabel new];
+        self.stateLabel.font = KFontSize(12);
+        self.stateLabel.textAlignment = NSTextAlignmentCenter;
+        self.stateLabel.textColor = KHexColor(@"#ffffff");
+        self.stateLabel.backgroundColor = KHexColor(@"#ff5872");
+        self.stateLabel.layer.cornerRadius = 9;
+        self.stateLabel.layer.masksToBounds = YES;
+        self.stateLabel.text = @"异常";
+        [self.contentView addSubview:_stateLabel];
+        
+        
+        [_bgImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.left.bottom.right.equalTo(self.contentView);
+        }];
+        
+        [_stateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView.mas_top).offset(5);
+            make.right.equalTo(self.contentView.mas_right).offset(-5);
+            make.width.equalTo(35);
+            make.height.equalTo(18);
+        }];
+
+        
+    }
+     return self;
+}
+
+//背景图片
+- (void)setBgName:(NSString *)bgName
+{
+    if (![bgName isValid]) {
+        return;
+    }
+    
+    self.bgImage.image = [UIImage imageNamed:bgName];
+}
+
+
+
+@end
+
+
+/*-----------------------------------------------------------------------C-------------------------------------------*/
+
+#import "HealthSurveyVC.h"
+#import "ZYMenuController.h"
+#import "EveryDaySurveyRecordVC.h"
+#import "UICollectionViewWaterfallLayout.h"//瀑布流
+#import "FetalHeartVC.h"                   //8
+#import "FetalMove.h"
+#import "TemperatureVC.h"
+#import "BloodPressureVC.h"
+#import "WeightVC.h"
+#import "HeartRateVC.h"
+#import "BloodSugarVC.h"
+#import "OximeterVC.h"
+
+static NSString *identifier = @"HealthItem";
+
+@interface HealthSurveyVC ()<UICollectionViewDelegateWaterfallLayout,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+
+@property(nonatomic,strong)UITableView *tableView;
+
+
+@property (nonatomic, strong) UICollectionView *collectionView;
+@end
+
+@implementation HealthSurveyVC
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        
+       
+        
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1-First-level-navigation"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+        
+        UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"3_monitor"] style:(UIBarButtonItemStylePlain) target:self action:@selector(rightClick)];
+        self.navigationItem.rightBarButtonItem = right;
+        right.tintColor = KHexColor(@"#ffffff");
+      
+    }
+    
+    return self;
+}
+
+- (void)leftClicked
+{
+   [self.menuController showLeftViewController:YES];
+    
+}
+
+- (void)rightClick
+{
+    EveryDaySurveyRecordVC *every = [EveryDaySurveyRecordVC new];
+    [self.navigationController pushViewController:every animated:YES];
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = NO;
+    self.menuController.panEnabel = YES;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    NavigationBarTitleColor
+    self.view.backgroundColor = KHexColor(@"#ebebeb");
+    
+    UICollectionViewWaterfallLayout *layout = [[UICollectionViewWaterfallLayout alloc] init];
+    //设置每个item 的宽度
+    layout.itemWidth = (CoreWidth - 14)*154/310;
+    //设置多少列
+    layout.columnCount = 2;
+    //设置delegate 通过协议获得每隔item的高度
+    layout.delegate = self;
+    //设置上左下右的间距
+    layout.sectionInset = UIEdgeInsetsMake(10, 5, 5, 5);
+    
+    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    collectionView.backgroundColor = KHexColor(@"#ebebeb");
+    collectionView.dataSource = self;
+    collectionView.delegate = self;
+    [self.view addSubview:collectionView];
+    
+    [collectionView registerClass:[HealthSurveyCustomCell class] forCellWithReuseIdentifier:identifier];
+ 
+    
+}
+
+
+#pragma mark ---------------delegate-------------
+
+//每个item 的高度
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewWaterfallLayout *)collectionViewLayout heightForItemAtIndexPath:(NSIndexPath *)indexPath
+
+{
+    return (CoreHeight-200)/4;
+}
+
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return 8;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    HealthSurveyCustomCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    
+   
+    NSArray *arrayBgImage = @[@"4-1-monitor",@"4-2-monitor",@"4-3-monitor",@"4-5-monitor",@"4-6-monitor",@"4-7-monitor",@"4-8-monitor",@"4-9-monitor"];
+    cell.bgName = arrayBgImage[indexPath.item];
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    //UICollectionViewCell * cell = (UICollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    NSLog(@"%ld",(long)indexPath.item);
+    
+    if (indexPath.item == 0)
+    {
+        FetalHeartVC *heart = [FetalHeartVC new];
+        [self.navigationController pushViewController:heart animated:YES];
+    }
+    else if (indexPath.item == 1){
+        
+        FetalMove *move = [FetalMove new];
+        [self.navigationController pushViewController:move animated:YES];
+    }
+    else if (indexPath.item == 2){
+        
+        TemperatureVC *heart = [TemperatureVC new];
+        [self.navigationController pushViewController:heart animated:YES];
+    }
+
+    else if (indexPath.item == 3){
+        
+        BloodPressureVC *heart = [BloodPressureVC new];
+        [self.navigationController pushViewController:heart animated:YES];
+        
+    }
+
+    else if (indexPath.item == 4){
+        
+        WeightVC *heart = [WeightVC new];
+        [self.navigationController pushViewController:heart animated:YES];
+    }
+    else if (indexPath.item == 5){
+        
+        HeartRateVC *heart = [HeartRateVC new];
+        [self.navigationController pushViewController:heart animated:YES];
+    }
+
+    else if (indexPath.item == 6){
+        
+        BloodSugarVC *heart = [BloodSugarVC new];
+        [self.navigationController pushViewController:heart animated:YES];
+    }
+
+    else if (indexPath.item == 7){
+        
+        OximeterVC *heart = [OximeterVC new];
+        [self.navigationController pushViewController:heart animated:YES];
+    }
+    
+    
+}
+
+
+
+@end

@@ -1,0 +1,848 @@
+//
+//  YueSaoDetailVC.m
+//  Mamabao
+//
+//  Created by Michael on 15/12/11.
+//  Copyright © 2015年 Michael. All rights reserved.
+//
+
+/*-----------------------------------------------------------------------M-------------------------------------------*/
+
+
+@interface YueSaoDetailModel  : NSObject
+
+@property (nonatomic, strong) NSString *nanny_id;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *price;
+@property (nonatomic, strong) NSString *imageUrl;
+@property (nonatomic, strong) NSString *age;
+@property (nonatomic, strong) NSString *address;
+
+@property (nonatomic, strong) NSString *YSpingLun_id;
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *userimg;
+@property (nonatomic, strong) NSString *discuss;
+@property (nonatomic, strong) NSString *addTime;
+@property (nonatomic, strong) NSString *grade;
+- (instancetype)initWithDictionary:(NSDictionary *)dic;
+- (instancetype)initWithPingLunDictionary:(NSDictionary *)dicP;
+@end
+
+
+
+@interface YueSaoDetailModel ()
+
+@end
+
+@implementation YueSaoDetailModel
+
+- (instancetype)initWithDictionary:(NSDictionary *)dic
+{
+    if (self == [super init]) {
+        
+        if ([dic objectForKey:@"name"]) {
+            self.name = [dic objectForKey:@"name"];
+        }
+        if ([[dic objectForKey:@"age"] isKindOfClass:[NSNumber class]]) {
+            self.age = [[dic objectForKey:@"age"] stringValue];
+        }
+        if ([dic objectForKey:@"imageUrl"]) {
+            self.imageUrl = [dic objectForKey:@"imageUrl"];
+        }
+        if ([dic objectForKey:@"price"]) {
+            self.price = [dic objectForKey:@"price"];
+        }
+        if ([dic objectForKey:@"address"]) {
+            self.address = [dic objectForKey:@"address"];
+        }
+        if ([[dic objectForKey:@"id"] isKindOfClass:[NSNumber class]]) {
+            self.nanny_id = [[dic objectForKey:@"id"] stringValue];
+        }
+
+
+    }
+    return self;
+}
+
+- (instancetype)initWithPingLunDictionary:(NSDictionary *)dicP
+{
+    if (self == [super init]) {
+        
+        if ([dicP objectForKey:@"username"]) {
+            self.username = [dicP objectForKey:@"username"];
+        }
+        if ([dicP objectForKey:@"userimg"]) {
+            self.userimg = [dicP objectForKey:@"userimg"];
+        }
+        
+        if ([dicP objectForKey:@"discuss"]) {
+            self.discuss = [dicP objectForKey:@"discuss"];
+        }
+        
+        if ([dicP objectForKey:@"addTime"]) {
+            self.addTime = [dicP objectForKey:@"addTime"];
+        }
+        
+    }
+    return self;
+}
+@end
+
+
+/*-----------------------------------------------------------------------V-------------------------------------------*/
+@interface YueSaoDetaiCustomCell : UITableViewCell
+@property (nonatomic, strong) void(^reserverBlock)();
+@property (nonatomic, strong) YueSaoDetailModel *yueZiDetailModel;
+@property (nonatomic, strong) NSString *nanny_id;
+@end
+
+
+
+@interface YueSaoDetaiCustomCell ()
+
+@property (nonatomic, strong) UIView *cellView;
+@property (nonatomic, strong) UIImageView *iconImage;
+@property (nonatomic, strong) UIImageView *ageImage;
+@property (nonatomic, strong) UIImageView *addressImage;
+@property (nonatomic, strong) TTTAttributedLabel *taoCanLabel;
+@property (nonatomic, strong) TTTAttributedLabel *moneyLabel;
+@property (nonatomic, strong) TTTAttributedLabel *ageLabel;
+@property (nonatomic, strong) TTTAttributedLabel *addressLabel;
+@property (nonatomic, strong) UIButton *payButton;
+
+@end
+
+@implementation YueSaoDetaiCustomCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+
+{
+    if (self == [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.cellView = [UIView new];
+        self.cellView.backgroundColor = KHexColor(@"#ffffff");
+        self.cellView.layer.cornerRadius = 5;
+        self.cellView.layer.masksToBounds = YES;
+        self.cellView.layer.borderColor = KHexColor(@"#e6e6e6").CGColor;
+        self.cellView.layer.borderWidth = 1;
+        [self.contentView addSubview:_cellView];
+        
+        
+        
+        self.iconImage = [UIImageView new];
+        self.iconImage.layer.cornerRadius = 5;
+        self.iconImage.layer.masksToBounds = YES;
+        [self.contentView addSubview:_iconImage];
+        
+        
+        
+        self.taoCanLabel = [TTTAttributedLabel new];
+        self.taoCanLabel.textColor = KHexColor(@"#333333");
+        self.taoCanLabel.font = KFontSize(14);
+        [self.contentView addSubview:_taoCanLabel];
+        
+        
+        
+        
+        
+        self.moneyLabel = [TTTAttributedLabel new];
+        self.moneyLabel.font = KFontSize(13);
+        self.moneyLabel.textColor = KHexColor(@"#ff7e79");
+        [self.contentView addSubview:_moneyLabel];
+        
+        
+        
+        self.ageImage = [UIImageView new];
+        self.ageImage.image = [UIImage  imageNamed:@"yuesao_6domestic"];
+        [self.contentView addSubview:_ageImage];
+        
+        self.addressImage = [UIImageView new];
+        self.addressImage.image = [UIImage  imageNamed:@"yuesao_3domestic"];
+        [self.contentView addSubview:_addressImage];
+
+        self.ageLabel = [TTTAttributedLabel new];
+        self.ageLabel.font = KFontSize(13);
+        self.ageLabel.textColor = KHexColor(@"#888888");
+        [self.contentView addSubview:_ageLabel];
+        
+        self.addressLabel = [TTTAttributedLabel new];
+        self.addressLabel.font = KFontSize(13);
+        self.addressLabel.textColor = KHexColor(@"#888888");
+        [self.contentView addSubview:_addressLabel];
+
+        
+        self.payButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.payButton.titleLabel.font = KFontSize(15);
+        self.payButton.layer.cornerRadius = 5;
+        self.payButton.layer.masksToBounds = YES;
+        [self.payButton addTarget:self action:@selector(reservationButtonClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.payButton setTitle:@"查看" forState:UIControlStateNormal];
+        [self.payButton setTitleColor:KHexColor(@"#ffffff") forState:UIControlStateNormal];
+        [self.payButton setBackgroundImage:[UIImage createImageWithColor:KHexColor(@"#ea7fa9")] forState:UIControlStateNormal];
+        [self.contentView addSubview:_payButton];
+        
+        
+        
+        [_cellView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView.mas_top).offset(3);
+            make.left.equalTo(self.contentView.mas_left).offset(6);
+            make.bottom.equalTo(self.contentView.mas_bottom).offset(-3);
+            make.right.equalTo(self.contentView.mas_right).offset(-6);
+            
+        }];
+        
+        [_iconImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView.mas_centerY).offset(0);
+            make.left.equalTo(self.contentView.mas_left).offset(15);
+            make.width.equalTo(55);
+            make.height.equalTo(55);
+        }];
+        
+        
+        
+        
+        [_taoCanLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.iconImage.mas_top).offset(0);
+            make.left.equalTo(self.iconImage.mas_right).offset(15);
+            make.width.equalTo(self.taoCanLabel.mas_width);
+            make.height.equalTo(14);
+        }];
+        
+        
+        
+        
+        [_moneyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.taoCanLabel.mas_centerY).offset(0);
+            make.left.equalTo(self.taoCanLabel.mas_right).offset(30);
+            make.width.equalTo(self.moneyLabel.mas_width);
+            make.height.equalTo(15);
+            
+        }];
+        
+        [_iconImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView.mas_centerY).offset(0);
+            make.left.equalTo(self.contentView.mas_left).offset(15);
+            make.width.equalTo(55);
+            make.height.equalTo(55);
+        }];
+        
+        [_ageImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.iconImage.mas_bottom).offset(0);
+            make.left.equalTo(self.taoCanLabel.mas_left).offset(0);
+            make.width.equalTo(11);
+            make.height.equalTo(12);
+        }];
+        
+        [_addressImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.ageImage.mas_centerY).offset(0);
+            make.left.equalTo(self.ageImage.mas_right).offset(70);
+            make.width.equalTo(5);
+            make.height.equalTo(9);
+        }];
+
+        [_ageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.ageImage.mas_centerY).offset(0);
+            make.left.equalTo(self.ageImage.mas_right).offset(10);
+            make.width.equalTo(self.ageLabel.mas_width);
+            make.height.equalTo(13);
+        }];
+
+        [_addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.ageImage.mas_centerY).offset(0);
+            make.left.equalTo(self.addressImage.mas_right).offset(10);
+            make.width.equalTo(self.addressLabel.mas_width);
+            make.height.equalTo(13);
+        }];
+
+        
+        [_payButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView.mas_centerY).offset(0);
+            make.right.equalTo(self.cellView.mas_right).offset(-15);
+            make.width.equalTo(50);
+            make.height.equalTo(25);
+        }];
+        
+        
+    }
+    return self;
+}
+
+
+- (void)reservationButtonClick
+{
+    if (self.reserverBlock) {
+        self.reserverBlock();
+    }
+}
+- (void)setYueZiDetailModel:(YueSaoDetailModel *)yueZiDetailModel
+{
+    if (nil == yueZiDetailModel) {
+        return;
+    }
+    self.nanny_id = yueZiDetailModel.nanny_id;
+    self.taoCanLabel.text = yueZiDetailModel.name;
+    self.addressLabel.text = yueZiDetailModel.address;
+    self.moneyLabel.text = [NSString stringWithFormat:@"(%@元/月)", yueZiDetailModel.price];
+    self.ageLabel.text = [NSString stringWithFormat:@"%@岁",yueZiDetailModel.age];
+    [self.iconImage sd_setImageWithURL:[NSURL URLWithString:yueZiDetailModel.imageUrl] placeholderImage:nil];
+    
+}
+
+@end
+/*-----------------------------------------------------------------------V-------------------------------------------*/
+@interface  YSPingLunCustomCell: UITableViewCell
+
+@property (nonatomic, strong) YueSaoDetailModel *pingLunModel;
+
+@end
+
+@interface YSPingLunCustomCell ()
+
+@property (nonatomic, strong) UIView *cellView;
+@property (nonatomic, strong) UIImageView *iconImage;
+@property (nonatomic, strong) UIImageView *xinImage1;
+@property (nonatomic, strong) TTTAttributedLabel *nameLabel;
+@property (nonatomic, strong) TTTAttributedLabel *pingLunLabel;
+
+@end
+
+@implementation YSPingLunCustomCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+
+{
+    if (self == [super initWithStyle:style reuseIdentifier:reuseIdentifier])
+    {
+        
+        
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.cellView = [UIView new];
+        self.cellView.backgroundColor = KHexColor(@"#ffffff");
+        self.cellView.layer.cornerRadius = 5;
+        self.cellView.layer.masksToBounds = YES;
+        self.cellView.layer.borderColor = KHexColor(@"#e6e6e6").CGColor;
+        self.cellView.layer.borderWidth = 1;
+        [self.contentView addSubview:_cellView];
+        
+        
+        
+        self.iconImage = [UIImageView new];
+        [self.contentView addSubview:_iconImage];
+        
+        self.xinImage1 = [UIImageView new];
+        [self.contentView addSubview:_xinImage1];
+        
+        
+        self.nameLabel = [TTTAttributedLabel new];
+        self.nameLabel.textColor = KHexColor(@"#333333");
+        self.nameLabel.font = KFontSize(13);
+        [self.contentView addSubview:_nameLabel];
+        
+        
+        self.pingLunLabel = [TTTAttributedLabel new];
+        self.pingLunLabel.font = KFontSize(13);
+        self.pingLunLabel.textColor = KHexColor(@"#999999");
+        [self.contentView addSubview:_pingLunLabel];
+        
+        [_cellView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView.mas_top).offset(3);
+            make.left.equalTo(self.contentView.mas_left).offset(6);
+            make.bottom.equalTo(self.contentView.mas_bottom).offset(-3);
+            make.right.equalTo(self.contentView.mas_right).offset(-6);
+            
+        }];
+        
+        
+        [_iconImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView.mas_top).offset(15);
+            make.left.equalTo(self.contentView.mas_left).offset(15);
+            make.width.equalTo(30);
+            make.height.equalTo(30);
+        }];
+        
+        
+        [_xinImage1 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.iconImage.mas_centerY).offset(0);
+            make.right.equalTo(self.cellView.mas_right).offset(-20);
+            make.width.equalTo(15);
+            make.height.equalTo(15);
+        }];
+        
+        
+        [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.iconImage.mas_centerY).offset(0);
+            make.left.equalTo(self.iconImage.mas_right).offset(15);
+            make.width.equalTo(self.nameLabel.mas_width);
+            make.height.equalTo(13);
+        }];
+        
+        
+        
+        [_pingLunLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.cellView.mas_bottom).offset(-7);
+            make.left.equalTo(self.nameLabel.mas_left).offset(0);
+            make.width.equalTo(self.pingLunLabel.mas_width);
+            make.height.equalTo(15);
+            
+        }];
+        
+    }
+    
+    return self;
+}
+
+- (void)setPingLunModel:(YueSaoDetailModel *)pingLunModel
+{
+    if (nil == pingLunModel) {
+        return;
+    }
+    
+    self.iconImage.image = [UIImage imageNamed:@"circle_12mothe"];
+    self.nameLabel.text = pingLunModel.username;
+    self.pingLunLabel.text = pingLunModel.discuss;
+    [self.iconImage sd_setImageWithURL:[NSURL URLWithString:pingLunModel.userimg] placeholderImage:nil];
+    self.xinImage1.image = [pingLunModel.grade isEqualToString:@"1"] ? [UIImage imageNamed:@"evaluation"] : [pingLunModel.grade isEqualToString:@"0"] ?  [UIImage imageNamed:@"evaluation2"] :[UIImage imageNamed:@"evaluation3"] ;
+    
+}
+@end
+
+/*-----------------------------------------------------------------------C-------------------------------------------*/
+#import "YueSaoDetailVC.h"
+#import "YueZiDetailTaoCanVC.h"
+#import "KeYuYueCanGuanVC.h"
+#import "SQImagePlayerView.h"               //滑动的图片
+#import "UIScrollView+SQParallaxHeader.h"   //滑动的图片
+#import "NameVC.h"
+@interface YueSaoDetailVC ()<UITableViewDataSource,UITableViewDelegate,SQImagePlayerViewDelegate>
+@property (nonatomic, strong) SQImagePlayerView *imagePlayerView;
+@property (nonatomic, strong) NSArray *dataImage;
+@property (nonatomic, strong) NSMutableArray *dataMuImage;
+@property (nonatomic, strong) NSMutableArray *dataArray;
+@property (nonatomic, strong) NSMutableArray *taoCanDataArray;
+@property (nonatomic, strong) NSMutableArray *pingLunArray;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) UIImageView *headerImage;
+@property (nonatomic, strong) TTTAttributedLabel *indroduceLabel;
+@property (nonatomic, strong) UIImageView *bottomImage;
+@property (nonatomic, strong) UIView *callView;
+@property (nonatomic, strong) UIView *locationView;
+@property (nonatomic, strong) UIImageView *callImage;
+@property (nonatomic, strong) UIImageView *locationImage;
+@property (nonatomic, strong) TTTAttributedLabel *callLabel;
+@property (nonatomic, strong) TTTAttributedLabel *locationLabel;
+@property (nonatomic, strong) UIButton *callButton;
+@property (nonatomic, strong) UIButton *locationButton;
+@end
+
+@implementation YueSaoDetailVC
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self == [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"loding-5"] style:(UIBarButtonItemStylePlain) target:self action:@selector(leftClicked)];
+        self.navigationItem.leftBarButtonItem = left;
+        left.tintColor = KHexColor(@"#ffffff");
+        
+        UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithTitle:@"预约参观" style:(UIBarButtonItemStylePlain) target:self action:@selector(rightClick)];
+        self.navigationItem.rightBarButtonItem = right;
+        right.tintColor = KHexColor(@"#ffffff");
+    }
+    return self;
+}
+
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = self.navigationTitle;
+    NavigationBarTitleColor
+    self.menuController.panEnabel = NO;
+    self.dataArray = [NSMutableArray array];
+    self.taoCanDataArray = [NSMutableArray array];
+    self.pingLunArray = [NSMutableArray array];
+    self.dataImage = [NSMutableArray array];
+    self.dataMuImage = [NSMutableArray array];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:(UITableViewStyleGrouped)];
+    self.tableView.backgroundColor = KHexColor(@"#ffffff");
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.rowHeight = 80;
+    [self.view addSubview:_tableView];
+    
+    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.bottom.right.equalTo(self.view);
+    }];
+    
+    self.imagePlayerView = [[SQImagePlayerView alloc]initWithFrame:CGRectMake(0, 0, CoreWidth, 167)];   //滑动图片
+    self.imagePlayerView.pageControlPosition = SQPageControlPosition_BottomRight;
+    //[self.imagePlayerView initWithCount:_dataImage.count == 0 ? 0 : _dataImage.count delegate:self];
+    [_tableView setParallaxHeaderView:_imagePlayerView mode:SQParallaxHeaderModeFill height:167];
+    [self requestData];
+}
+#pragma mark ------------------------------------------------------------------Actions  ButtonClick-----------------------------------------------------------
+
+- (void)callButtonClick
+{
+    NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"telprompt://%@",self.callLabel.text];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+}
+
+- (void)locationButtonClick
+{
+    
+}
+- (void)sectionButtonClick
+{
+    
+}
+
+- (void)leftClicked
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)rightClick
+{
+    KeYuYueCanGuanVC *ke = [KeYuYueCanGuanVC new];
+    [self.navigationController pushViewController:ke animated:YES];
+}
+
+#pragma mark ------------------------------------------------------------------UITableViewDatasource Delegate-------------------------------------------------
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 2;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return section == 0 ? 150 : 30;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        [self makeUI];
+        
+        UIImageView *sectionImage = [UIImageView new];
+        sectionImage.image = [UIImage imageNamed:@"service_19mother"];
+        [self.headerView addSubview:sectionImage];
+        
+        UILabel *sectionLabel = [UILabel new];
+        sectionLabel.textColor = KHexColor(@"#856b6a");
+        sectionLabel.font = KFontSize(14);
+        sectionLabel.text = @"推荐列表";
+        [self.headerView addSubview:sectionLabel];
+        
+        [sectionImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.headerView.mas_bottom).offset(-5);
+            make.left.equalTo(self.headerView.mas_left).offset(10);
+            make.width.equalTo(15);
+            make.height.equalTo(15);
+        }];
+        
+        [sectionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(sectionImage.mas_centerY).offset(0);
+            make.left.equalTo(sectionImage.mas_right).offset(5);
+            make.width.equalTo(sectionLabel.mas_width);
+            make.height.equalTo(15);
+        }];
+        if (_dataArray.count > 0) {
+            self.callLabel.text = [self.dataArray[0] objectForKey:@"phone"];
+            self.locationLabel.text = [self.dataArray[0] objectForKey:@"address"];
+            self.indroduceLabel.text = [self.dataArray[0] objectForKey:@"content"];
+        }
+        return _headerView;
+    }
+    
+    else{
+        UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CoreWidth, 30)];
+        sectionView.backgroundColor = KHexColor(@"#ffffff");
+        
+        
+        UIImageView *sectionImage = [UIImageView new];
+        sectionImage.image = [UIImage imageNamed:@"list_information"];
+        [sectionView addSubview:sectionImage];
+        
+        UILabel *sectionLabel = [UILabel new];
+        sectionLabel.textColor = KHexColor(@"#856b6a");
+        sectionLabel.font = KFontSize(14);
+        sectionLabel.text = @"评论列表";
+        [sectionView addSubview:sectionLabel];
+        
+        [sectionImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(sectionView.mas_top).offset(10);
+            make.left.equalTo(sectionView.mas_left).offset(10);
+            make.width.equalTo(15);
+            make.height.equalTo(15);
+        }];
+        
+        [sectionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(sectionImage.mas_centerY).offset(0);
+            make.left.equalTo(sectionImage.mas_right).offset(5);
+            make.width.equalTo(sectionLabel.mas_width);
+            make.height.equalTo(15);
+        }];
+        return sectionView;
+        
+    }
+    
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return section == 0 ? [_taoCanDataArray count] : [_pingLunArray count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        static NSString *identifier = @"cell";
+        YueSaoDetaiCustomCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if (nil == cell)
+        {
+            cell = [[YueSaoDetaiCustomCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifier];
+        }
+        cell.yueZiDetailModel = _taoCanDataArray[indexPath.row];
+        [cell setReserverBlock:^{
+            NameVC *ge = [NameVC new];
+            ge.entity_id = self.entity_id;
+            ge.nanny_id = cell.nanny_id;
+            ge.nanny_name = cell.taoCanLabel.text;
+            [self.navigationController pushViewController:ge animated:YES];
+        }];
+        return cell;
+    }
+    else
+    {
+        static NSString *identifierP = @"pingLun_cell";
+        YSPingLunCustomCell *cell = [tableView dequeueReusableCellWithIdentifier:identifierP];
+        if (nil == cell) {
+            cell = [[YSPingLunCustomCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:identifierP];
+        }
+        cell.pingLunModel = _pingLunArray[indexPath.row];
+        return cell;
+    }
+    
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+}
+#pragma mark ------------------------------------------------------------------ ASURLConnection -------------------------------------------------------------------
+- (void)requestData
+{
+    //套餐
+    [ASURLConnection requestAFNJSon:@{@"entity_id":self.entity_id} method:@"renhe.momService.entityDetail" view:self.view version:@"/v3" completeBlock:^(NSData *data, id responseObject) {
+        
+        if ([[ASURLConnection getMsg:responseObject] isEqualToNumber:@1])
+        {
+            
+            self.dataArray = [[[ASURLConnection doDESDecrypt:responseObject] objectFromJSONString]objectForKey:@"data"];//字典接受没有objectAtIndex
+            [self backData];
+            
+        }
+        [_tableView reloadData];
+        
+    } errorBlock:^(NSError *error) {
+        
+    }];
+    
+    //月嫂评论
+    [ASURLConnection requestAFNJSon:@{@"nanny_id":self.entity_id} method:@"renhe.orderService.nannyDiscussPage" view:self.view version:@"/v3" completeBlock:^(NSData *data, id responseObject) {
+        
+        if ([[ASURLConnection getMsg:responseObject] isEqualToNumber:@1])
+        {
+            
+            NSArray *dataArrP = [[[ASURLConnection doDESDecrypt:responseObject] objectFromJSONString] objectForKey:@"data"];
+            
+            for (NSDictionary *dic in dataArrP)
+            {
+                YueSaoDetailModel *model = [[YueSaoDetailModel alloc] initWithPingLunDictionary:dic];
+                [self.pingLunArray  addObject:model];
+            }
+            [_tableView reloadData];
+        }
+        
+    } errorBlock:^(NSError *error) {
+        
+    }];
+    
+}
+
+- (void)backData
+{
+    [self.headerImage sd_setImageWithURL:[NSURL URLWithString:[self.dataArray[0] objectForKey:@"imageUrl"]] placeholderImage:nil];
+    NSString *string = [self.dataArray[0] objectForKey:@"imageUrl"];
+    _dataImage = [string componentsSeparatedByString:@";"];
+    [self.imagePlayerView initWithCount:_dataImage.count == 0 ? 0 : _dataImage.count delegate:self];
+
+    if ([[self.dataArray[0] objectForKey:@"imageUrl"] rangeOfString:@";"].location != NSNotFound)       //判断有没有分号
+    {
+        NSString *string = [self.dataArray[0] objectForKey:@"imageUrl"];
+        _dataImage = [string componentsSeparatedByString:@";"];
+    }
+    else
+    {
+       
+        [_dataMuImage addObject:[self.dataArray[0] objectForKey:@"imageUrl"]];
+    }
+   
+    
+    
+    if ([self.isNanny isEqualToString:@"1"])
+    {
+        NSArray *yueSaoDataArray = [self.dataArray[0] objectForKey:@"nannys"];                           //月嫂
+        for (NSDictionary *dic in  yueSaoDataArray)
+        {
+            YueSaoDetailModel *model = [[YueSaoDetailModel alloc] initWithDictionary:dic];
+            [_taoCanDataArray addObject:model];
+        }
+        
+    }
+    
+}
+
+#pragma mark - SQImagePlayerViewDelegate
+- (NSInteger)numberOfItems
+{
+    return _dataImage.count;
+}
+- (void)imagePlayerView:(SQImagePlayerView *)imagePlayerView loadImageForImageView:(UIImageView *)imageView index:(NSInteger)index{
+    
+   
+    if (![[self.dataArray[0] objectForKey:@"imageUrl"] isEqualToString:@""])
+    {
+        [imageView sd_setImageWithURL:[NSURL URLWithString:_dataImage.count == 1 ? _dataMuImage[0] : _dataImage[index]] placeholderImage:nil];
+    }
+    
+}
+
+#pragma mark - Action
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.tableView shouldPositionParallaxHeader];
+}
+#pragma mark ------------------------------------------------------------------Self makeUI -------------------------------------------------------------------
+- (void)makeUI
+{
+    
+    self.headerView = [[UIView  alloc] initWithFrame:CGRectMake(0, 0, CoreWidth, 300-120)];
+    self.headerView.backgroundColor = KHexColor(@"#ffffff");
+    
+    self.indroduceLabel = [TTTAttributedLabel new];
+    self.indroduceLabel.textColor = KHexColor(@"#616161");
+    self.indroduceLabel.lineSpacing = 4;
+    self.indroduceLabel.numberOfLines = 0;
+    self.indroduceLabel.font = KFontSize(14);
+    [self.headerView addSubview:_indroduceLabel];
+    
+    
+    self.bottomImage = [UIImageView new];
+    self.bottomImage.image = [UIImage imageNamed:@"the_bottom_bar"];
+    [self.headerView addSubview:_bottomImage];
+    
+    
+    self.callView = [UIView new];
+    [self.headerView addSubview:_callView];
+    
+    
+    self.callImage = [UIImageView new];
+    self.callImage.image = [UIImage imageNamed:@"telephone"];
+    [self.callView  addSubview:_callImage];
+    
+    
+    self.callLabel = [TTTAttributedLabel new];
+    self.callLabel.textColor = KHexColor(@"#666666");
+    self.callLabel.font = KFontSize(14);
+    [self.callView addSubview:_callLabel];
+    
+    
+    self.callButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.callButton addTarget:self action:@selector(callButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerView addSubview:_callButton];
+    
+    
+    self.locationView = [UIView new];
+    [self.headerView addSubview:_locationView];
+    
+    
+    self.locationImage = [UIImageView new];
+    self.locationImage.image = [UIImage imageNamed:@"address"];
+    [self.callView  addSubview:_locationImage];
+    
+    
+    self.locationLabel = [TTTAttributedLabel new];
+    self.locationLabel.textColor = KHexColor(@"#666666");
+    self.locationLabel.font = KFontSize(14);
+    [self.callView addSubview:_locationLabel];
+    
+    
+    
+    self.locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.locationButton addTarget:self action:@selector(locationButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerView addSubview:_locationButton];
+    
+    [_indroduceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.headerView.mas_top).offset(10);
+        make.left.equalTo(self.headerView.mas_left).offset(10);
+        make.right.equalTo(self.headerView.mas_right).offset(-10);
+        make.height.equalTo(40);
+    }];
+    
+    [_bottomImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.indroduceLabel.mas_bottom).offset(5);
+        make.left.equalTo(self.headerView.mas_left).offset(4);
+        make.right.equalTo(self.headerView.mas_right).offset(-4);
+        make.height.equalTo(65);
+    }];
+    
+    [_callView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.indroduceLabel.mas_bottom).offset(5);
+        make.left.equalTo(self.headerView);
+        make.right.equalTo(self.headerView.mas_centerX).offset(0);
+        make.height.equalTo(65);
+    }];
+    [_callImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.callView.mas_centerX).offset(0);
+        make.top.equalTo(self.callView.mas_top).offset(15);
+        make.width.equalTo(21);
+        make.height.equalTo(21);
+    }];
+    
+    [_callLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.callView.mas_centerX).offset(0);
+        make.top.equalTo(self.callImage.mas_bottom).offset(0);
+        make.width.equalTo(self.callLabel.mas_width);
+        make.height.equalTo(21);
+    }];
+    
+    [_callButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.bottom.right.equalTo(self.callView);
+    }];
+    
+    
+    [_locationView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.indroduceLabel.mas_bottom).offset(5);
+        make.right.equalTo(self.headerView);
+        make.left.equalTo(self.headerView.mas_centerX).offset(0);
+        make.height.equalTo(65);
+    }];
+    [_locationImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.locationView.mas_centerX).offset(0);
+        make.top.equalTo(self.locationView.mas_top).offset(15);
+        make.width.equalTo(21);
+        make.height.equalTo(21);
+    }];
+    [_locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.locationView.mas_centerX).offset(0);
+        make.top.equalTo(self.locationImage.mas_bottom).offset(0);
+        make.width.equalTo(self.locationLabel.mas_width);
+        make.height.equalTo(21);
+    }];
+    [_locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.bottom.right.equalTo(self.locationView);
+    }];
+}
+
+@end
+
+
